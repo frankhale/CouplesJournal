@@ -32,7 +32,8 @@ Above and Beyond:
 
 ## Status
 
-Just getting off the ground...
+Just getting off the ground! No UI has been created yet. I'm working on the DB entities and API. Will transition to UI very
+soon.
 
 ## Author(s)
 
