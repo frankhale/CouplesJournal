@@ -1,0 +1,15 @@
+﻿@page "/"
+
+@using Markdig;
+@using CouplesJournal.Helper;
+
+<h1>Hello, world!</h1>
+
+<div>
+   @(((MarkupString)Welcome).Sanitize())
+</div>
+ 
+@code
+{
+    public string Welcome => Markdown.ToHtml("***Welcome***, This is your new *Blazor* application!");
+}
