@@ -1,0 +1,24 @@
+﻿@page "/NewJournal"
+
+@attribute [Authorize(Roles = "Contributor")]
+
+<h3>Create New Journal Entry</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="w-100">
+            <input class="form-control" type="text" placeholder="Enter Title Here..." />
+        </div>
+
+        <div class="w-100 mh-100" style="padding-top:15px;">
+            <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;"></textarea>            
+        </div>
+
+        <div class="w-100 mh-100" style="padding-top:15px; text-align:right;">
+            <button type="button" class="btn btn-primary">Add Journal</button>
+        </div>
+    </div>
+</div>
+
+@code {
+}

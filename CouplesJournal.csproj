@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="5.0.353" />
-    <PackageReference Include="Markdig" Version="0.21.1" />
+    <PackageReference Include="Markdig" Version="0.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0-rc.1.20451.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0-rc.1.20451.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0-rc.1.20451.17" />

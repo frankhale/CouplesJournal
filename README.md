@@ -17,7 +17,8 @@ The requirements are very simple so that the project will actually succeed.
 Minimum Viable Product: 
 
 - (Done) User accounts (provided by the Individual Accounts option when creating the project, SQLite instead of MSLocalDB)
-- As a user I should be able to login and submit a new journal entry
+- As a user I should be able to login 
+- As a user I should be able to submit a new journal entry
 - As a user I should be have a rich text WYSIWYG style text area to enter my journal entry or reply
 - As a user I should be able to view my journal entries as well as my partners in a list with newest first
 - As a user I should be able to edit my journal entries
