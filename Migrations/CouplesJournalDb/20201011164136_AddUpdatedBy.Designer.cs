@@ -3,14 +3,16 @@ using System;
 using CouplesJournal.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CouplesJournal.Migrations.CouplesJournalDb
 {
     [DbContext(typeof(CouplesJournalDbContext))]
-    partial class CouplesJournalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201011164136_AddUpdatedBy")]
+    partial class AddUpdatedBy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

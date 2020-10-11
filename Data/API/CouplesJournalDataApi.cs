@@ -1,7 +1,6 @@
 ﻿using CouplesJournal.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,6 +40,7 @@ namespace CouplesJournal.Data.API
         }
         #endregion
 
+        #region Misc
         public async Task<bool> SaveChangesAsync()
         {
             return (await _db.SaveChangesAsync()) > 0;
@@ -55,13 +55,31 @@ namespace CouplesJournal.Data.API
         {
             _db.Remove(entity);
         }
+        #endregion
 
+        #region Journal
         public async Task AddJournalEntryAsync(JournalEntry entry)
         {
             _db.JournalEntries.Add(entry);
             await _db.SaveChangesAsync();
         }
+        
+        public async Task EditJounralEntryAsync(Guid entryId, JournalEntry entry)
+        {
+            var journalEntry = _db.JournalEntries.FirstOrDefault(x => x.Id == entryId);
 
+            if (journalEntry != null)
+            {                
+                journalEntry.UpdatedOn = DateTime.Now;
+                journalEntry.Title = entry.Title;
+                journalEntry.Body = entry.Body;                
+
+                await SaveChangesAsync();
+            }
+        }
+        #endregion
+
+        #region Journal Reply
         public async Task AddJournalReplyAsync(Guid entryId, JournalReply reply)
         {            
             var entry = await _db.JournalEntries.FirstOrDefaultAsync(x => x.Id == entryId);
@@ -69,7 +87,23 @@ namespace CouplesJournal.Data.API
             if(entry != null)
             {
                 entry.Replies.Add(reply);
+
+                await SaveChangesAsync();
             }
         }
+
+        public async Task EditJounralEntryReplyAsync(Guid entryId, JournalReply reply)
+        {
+            var replyEntry = _db.JournalReplies.FirstOrDefault(x => x.Id == entryId);
+
+            if(replyEntry != null)
+            {
+                replyEntry.UpdatedOn = DateTime.Now;
+                replyEntry.Body = reply.Body;
+
+                await SaveChangesAsync();
+            }
+        }
+        #endregion
     }
 }

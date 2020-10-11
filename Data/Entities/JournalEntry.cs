@@ -9,8 +9,9 @@ namespace CouplesJournal.Data.Entities
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
         [MaxLength(450)]
-        public string UserName { get; set; }
+        public string UserName { get; set; }        
         public DateTime CreatedOn { get; set; }
+        public string UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
         [MaxLength(512)]
         public string Title { get; set; }
