@@ -2,41 +2,6 @@
 
 @attribute [Authorize(Roles = "Contributor")]
 
-@using CouplesJournal.Data.API
-@using CouplesJournal.Data.Entities
+<h3>Add Journal Entry</h3>
 
-@inject ICouplesJournalDataApi DataApi
-
-<h3>Create New Journal Entry</h3>
-
-<EditForm Model="@Entry" OnValidSubmit="@Submit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="w-100">
-                <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Entry.Title />
-            </div>
-
-            <div class="w-100 mh-100" style="padding-top:15px;">
-                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
-            </div>
-
-            <div class="w-100 mh-100" style="padding-top:15px; text-align:right;">
-                <button type="submit" class="btn btn-primary">Add Journal</button>
-            </div>
-        </div>
-    </div>
-</EditForm>
-
-@code {
-    private JournalEntry Entry = new JournalEntry();
-
-    private async Task Submit()
-    {
-        await DataApi.AddJournalEntryAsync(Entry);
-
-        Entry = new JournalEntry();
-    }
-}
+<JournalAdd />

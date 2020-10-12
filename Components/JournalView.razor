@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">@Entry.Title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">By: User1</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">by @Entry.UserName.Split("@")[0] on @Entry.UpdatedOn.ToLongDateString() &#64; @Entry.UpdatedOn.ToLongTimeString()</h6>
                         <p class="card-text">
                             @(((MarkupString) Markdown.ToHtml(@Entry.Body)).Sanitize())
                         </p>

@@ -26,5 +26,8 @@ namespace CouplesJournal.Data.API
         Task<IEnumerable<JournalReply>> GetJournalEntryRepliesAsync();
         #endregion
 
+        #region Journal Status
+        Task<IEnumerable<JournalStatus>> GetJournalStatusesAsync();
+        #endregion
     }
 }

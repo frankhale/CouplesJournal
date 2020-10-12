@@ -14,14 +14,14 @@
                 <div @key=entry class="card" style="margin-bottom: 15px;">
                     <div class="card-body">
                         <h5 class="card-title">@entry.Title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">By: User1</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">by @entry.UserName.Split("@")[0] on @entry.UpdatedOn.ToLongDateString() &#64; @entry.UpdatedOn.ToLongTimeString()</h6>
                         <p class="card-text">
                             @($"{new String(entry.Body.Take(250).ToArray())}...")
                         </p>
                         <a href=@($"/ViewJournal?journalId={entry.Id}") class="card-link">Read More...</a>
                         @if(entry.UserName == HttpAccessor.HttpContext.User.Identity.Name)
                         {
-                            <a href=@($"/EditJournal?journalId={entry.Id}") class="card-link">| Edit</a>
+                            <a href=@($"/EditJournal?journalId={entry.Id}") class="card-link">Edit</a>
                         }
                     </div>
                 </div>

@@ -14,14 +14,14 @@ The technology stack chosen:
 
 The requirements are very simple so that the project will actually succeed.
 
-Minimum Viable Product: 
+Minimum Viable Product:
 
 - (Done) User accounts (provided by the Individual Accounts option when creating the project, SQLite instead of MSLocalDB)
-- As a user I should be able to login 
-- As a user I should be able to submit a new journal entry
-- As a user I should be have a rich text WYSIWYG style text area to enter my journal entry or reply
+- (Done) As a user I should be able to login
+- (Done) As a user I should be able to submit a new journal entry
+- (Done) As a user I should be able to edit my journal entries
+- As a user I should be able to view a list of journal entries ordered by newest first
 - As a user I should be able to view my journal entries as well as my partners in a list with newest first
-- As a user I should be able to edit my journal entries
 - As a user I should be able to reply to a journal entries written by my partner
 - As a user I should be able to delete a journal entry that I wrote
 - As a user I should be able to delete a reply that I wrote
@@ -42,4 +42,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-11 October 2020
+12 October 2020

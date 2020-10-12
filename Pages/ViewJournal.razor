@@ -8,6 +8,8 @@
 @inject ICouplesJournalDataApi DataApi
 @inject NavigationManager NavManager
 
+<h3>View Journal Entry</h3>
+
 @if(EntryId != Guid.Empty)
 {
     <JournalView EntryId=@EntryId></JournalView>

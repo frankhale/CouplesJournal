@@ -62,7 +62,11 @@ namespace CouplesJournal.Data.API
 
         private void SetCreatedUpdated<T>(T entry) where T : Entity
         {
-            entry.CreatedOn = DateTime.Now;
+            if (entry.CreatedOn == DateTime.MinValue)
+            {
+                entry.CreatedOn = DateTime.Now;
+            }
+
             entry.UpdatedOn = DateTime.Now;
             entry.UserName = _httpContext.HttpContext.User.Identity.Name;
             entry.UpdatedBy = _httpContext.HttpContext.User.Identity.Name;
@@ -100,7 +104,9 @@ namespace CouplesJournal.Data.API
 
         public async Task<IEnumerable<JournalEntry>> GetJournalEntriesAsync()
         {
-            return await _db.JournalEntries.ToListAsync();
+            return await _db.JournalEntries
+                            .OrderByDescending(x => x.UpdatedOn)
+                            .ToListAsync();
         }
         #endregion
 
@@ -140,7 +146,14 @@ namespace CouplesJournal.Data.API
 
         public async Task<IEnumerable<JournalReply>> GetJournalEntryRepliesAsync()
         {
-            return await _db.JournalReplies.ToListAsync();
+            return await _db.JournalReplies.OrderByDescending(x => x.UpdatedOn).ToListAsync();
+        }
+        #endregion
+
+        #region Journal Status
+        public async Task<IEnumerable<JournalStatus>> GetJournalStatusesAsync()
+        {
+            return await _db.JournalStatuses.ToListAsync();
         }
         #endregion
     }
