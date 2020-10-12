@@ -9,18 +9,18 @@
 
 <h3>Create New Journal Entry</h3>
 
-<EditForm Model="@entry" OnValidSubmit="@Submit">
+<EditForm Model="@Entry" OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="container-fluid">
         <div class="row">
             <div class="w-100">
-                <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@entry.Title />
+                <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Entry.Title />
             </div>
 
             <div class="w-100 mh-100" style="padding-top:15px;">
-                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@entry.Body></textarea>
+                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
             </div>
 
             <div class="w-100 mh-100" style="padding-top:15px; text-align:right;">
@@ -31,12 +31,12 @@
 </EditForm>
 
 @code {
-    private JournalEntry entry = new JournalEntry();
+    private JournalEntry Entry = new JournalEntry();
 
     private async Task Submit()
     {
-        await DataApi.AddJournalEntryAsync(entry);
+        await DataApi.AddJournalEntryAsync(Entry);
 
-        entry = new JournalEntry();
+        Entry = new JournalEntry();
     }
 }

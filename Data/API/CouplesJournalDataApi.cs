@@ -60,7 +60,7 @@ namespace CouplesJournal.Data.API
             _db.Remove(entity);
         }
 
-        private void SetCreatedUpdated<T>(T entry) where T: Entity
+        private void SetCreatedUpdated<T>(T entry) where T : Entity
         {
             entry.CreatedOn = DateTime.Now;
             entry.UpdatedOn = DateTime.Now;
@@ -78,7 +78,7 @@ namespace CouplesJournal.Data.API
             await _db.SaveChangesAsync();
         }
 
-        public async Task EditJounralEntryAsync(Guid entryId, JournalEntry entry)
+        public async Task EditJournalEntryAsync(Guid entryId, JournalEntry entry)
         {
             var journalEntry = _db.JournalEntries.FirstOrDefault(x => x.Id == entryId);
 
@@ -119,7 +119,7 @@ namespace CouplesJournal.Data.API
             }
         }
 
-        public async Task EditJounralEntryReplyAsync(Guid entryId, JournalReply reply)
+        public async Task EditJournalEntryReplyAsync(Guid entryId, JournalReply reply)
         {
             var replyEntry = _db.JournalReplies.FirstOrDefault(x => x.Id == entryId);
 

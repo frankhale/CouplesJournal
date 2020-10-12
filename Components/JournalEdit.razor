@@ -1,0 +1,64 @@
+@namespace CouplesJournal.Components
+
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
+
+@inject ICouplesJournalDataApi DataApi
+@inject NavigationManager NavigationManager
+
+@if(!string.IsNullOrEmpty(ErrorMessage))
+{
+    <EditForm Model="@Entry" OnValidSubmit="@Submit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="w-100">
+                    <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Entry.Title />
+                </div>
+
+                <div class="w-100 mh-100" style="padding-top:15px;">
+                    <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
+                </div>
+
+                <div class="w-100 mh-100" style="padding-top:15px; text-align:right;">
+                    <button type="submit" class="btn btn-primary">Edit Journal</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <span>@ErrorMessage</span>
+}
+
+@code
+{
+    [Parameter]
+    public Guid EntryId { get; set; }
+
+    private JournalEntry Entry { get; set; }
+    private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (EntryId != Guid.Empty)
+        {
+            Entry = await DataApi.GetJournalEntryAsync(EntryId);
+
+            if (Entry == null)
+            {
+                ErrorMessage = "The journal entry does not exist!";
+            }
+        }
+    }
+
+    private async Task Submit()
+    {
+        await DataApi.EditJournalEntryAsync(EntryId, Entry);
+
+        NavigationManager.NavigateTo($"/ViewJournal?journalId={EntryId}");
+    }
+}

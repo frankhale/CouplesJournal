@@ -14,14 +14,14 @@ namespace CouplesJournal.Data.API
 
         #region Journal
         Task AddJournalEntryAsync(JournalEntry entry);
-        Task EditJounralEntryAsync(Guid entryId, JournalEntry entry);
+        Task EditJournalEntryAsync(Guid entryId, JournalEntry entry);
         Task<JournalEntry> GetJournalEntryAsync(Guid entryId);
         Task<IEnumerable<JournalEntry>> GetJournalEntriesAsync();
         #endregion
 
         #region Journal Entry
         Task AddJournalEntryReplyAsync(Guid entryId, JournalReply reply);
-        Task EditJounralEntryReplyAsync(Guid entryId, JournalReply reply);
+        Task EditJournalEntryReplyAsync(Guid entryId, JournalReply reply);
         Task<JournalReply> GetJournalEntryReplyAsync(Guid entryId);
         Task<IEnumerable<JournalReply>> GetJournalEntryRepliesAsync();
         #endregion
