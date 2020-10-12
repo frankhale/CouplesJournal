@@ -17,6 +17,7 @@ namespace CouplesJournal.Data.API
         Task EditJournalEntryAsync(Guid entryId, JournalEntry entry);
         Task<JournalEntry> GetJournalEntryAsync(Guid entryId);
         Task<IEnumerable<JournalEntry>> GetJournalEntriesAsync();
+        Task<JournalEntry> GetJournalEntryWithRepliesAsync(Guid entryId);
         Task<IEnumerable<JournalEntry>> GetMyJournalEntriesAsync();
         #endregion
 

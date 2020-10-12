@@ -1,7 +1,8 @@
 # Couples Journal
 
-A simple journaling app for couples to share their messages of love. This is my first Raspberry Pi project in that
-this app will be served from a Raspberry Pi for my wife and I to share endearing messages between each other.
+A simple journaling app for couples to share their messages of love. This is my
+first Raspberry Pi project in that this app will be served from a Raspberry Pi
+for my wife and I to share endearing messages between each other.
 
 The technology stack chosen:
 
@@ -16,25 +17,28 @@ The requirements are very simple so that the project will actually succeed.
 
 Minimum Viable Product:
 
-- (Done) User accounts (provided by the Individual Accounts option when creating the project, SQLite instead of MSLocalDB)
-- (Done) As a user I should be able to login
-- (Done) As a user I should be able to submit a new journal entry
-- (Done) As a user I should be able to edit my journal entries
-- As a user I should be able to view a list of journal entries ordered by newest first
-- As a user I should be able to view my journal entries as well as my partners in a list with newest first
+- (DONE) User accounts (provided by the Individual Accounts option when creating
+  the project, SQLite instead of MSLocalDB)
+- (DONE) As a user I should be able to login
+- (DONE) As a user I should be able to submit a new journal entry
+- (DONE) As a user I should be able to edit my journal entries
+- (DONE) As a user I should be able to view my journal entries as well as my
+  partners in a list with newest first
 - As a user I should be able to reply to a journal entries written by my partner
 - As a user I should be able to delete a journal entry that I wrote
 - As a user I should be able to delete a reply that I wrote
 
 Above and Beyond:
 
-- As a user I should be able to export journal entries as PDF for easy backup, printing my entries as well as the ones shared with me
-- As a user I want to be notified by email when a person submits or updates a journal entry or replies to a journal
+- As a user I should be able to export journal entries as PDF for easy backup,
+  printing my entries as well as the ones shared with me
+- As a user I want to be notified by email when a person submits or updates a
+  journal entry or replies to a journal
 
 ## Status
 
-Just getting off the ground! No UI has been created yet. I'm working on the DB entities and API. Will transition to UI very
-soon.
+Most of the core features are created. Lots of testing still needs to take
+place!
 
 ## Author(s)
 

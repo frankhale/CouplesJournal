@@ -119,6 +119,14 @@ namespace CouplesJournal.Data.API
                             .OrderByDescending(x => x.UpdatedOn)
                             .ToListAsync();
         }
+
+        public async Task<JournalEntry> GetJournalEntryWithRepliesAsync(Guid entryId)
+        {
+            return await _db.JournalEntries
+                            .Include(x => x.Status)
+                            .Include(x => x.Replies)
+                            .FirstOrDefaultAsync(x => x.Id == entryId);
+        }
         #endregion
 
         #region Journal Reply

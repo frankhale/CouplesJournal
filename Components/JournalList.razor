@@ -15,9 +15,9 @@
             {
                 <div @key=entry class="card" style=@(GetStyle(entry))>
                     <div class="card-body">
-                        <h5 class="card-title">@entry.Title</h5>
+                        <h5 class="card-title">@entry.Title @EntryStatus</h5>
                         <h6 class="card-subtitle mb-2 text-muted">by @entry.UserName.Split("@")[0] on @entry.UpdatedOn.ToLongDateString() &#64; @entry.UpdatedOn.ToLongTimeString()</h6>
-                        <p class="card-text">
+                        <p class="card-text" style="margin-top: 15px">
                             @(((MarkupString) Markdown.ToHtml($"{new String(entry.Body.Take(250).ToArray())}...")).Sanitize())
                         </p>
                         <a href=@($"/ViewJournal?journalId={entry.Id}") class="card-link">Read More...</a>
@@ -36,6 +36,8 @@
     [Parameter]
     public List<JournalEntry> Entries { get; set; }
 
+    private string EntryStatus { get; set; } = "";
+
     private string GetStyle(JournalEntry entry)
     {
         var defaultStyle = "margin-bottom: 15px";
@@ -47,6 +49,7 @@
         }
         else
         {
+            EntryStatus = $"({entry.Status.Value})";
             return $"{defaultStyle};{draftStatusBGColor}";
         }
     }
