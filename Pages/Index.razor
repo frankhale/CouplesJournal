@@ -9,7 +9,14 @@
 
 <AuthorizeView>
     <Authorized>
-        <JournalList Entries=@Entries />
+        @if(Entries.Any(x => x.Status.Value.ToLower() == "final"))
+        {
+            <JournalList Entries=@Entries />
+        }
+        else
+        {
+            <span>There are no Journal entries at this time...</span>
+        }
     </Authorized>
     <NotAuthorized>
         <div>

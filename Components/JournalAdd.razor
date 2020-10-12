@@ -2,6 +2,7 @@
 @using CouplesJournal.Data.Entities
 
 @inject ICouplesJournalDataApi DataApi
+@inject NavigationManager NavigationManager
 
 <EditForm Model="@Entry" OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
@@ -17,8 +18,20 @@
                 <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
             </div>
 
-            <div class="w-100 mh-100" style="padding-top:15px; text-align:right;">
-                <button type="submit" class="btn btn-primary">Add Journal</button>
+            <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
+                <div class="dropdown" style="display:inline;">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @Entry.Status.Value
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
+                        @foreach (var status in Statuses)
+                        {
+                            <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
+                        }
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="display:inline;">Add Journal</button>
             </div>
         </div>
     </div>
@@ -26,11 +39,24 @@
 
 @code {
     private JournalEntry Entry = new JournalEntry();
+    private List<JournalStatus> Statuses { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Statuses = (await DataApi.GetJournalStatusesAsync()).ToList();
+
+        Entry.Status = Statuses.FirstOrDefault(x => x.Value == "Draft");
+    }
 
     private async Task Submit()
     {
         await DataApi.AddJournalEntryAsync(Entry);
 
-        Entry = new JournalEntry();
+        NavigationManager.NavigateTo($"/ViewJournal?journalId={Entry.Id}");
+    }
+
+    private void OnMenuItemSelected(JournalStatus status)
+    {
+        Entry.Status = status;
     }
 }

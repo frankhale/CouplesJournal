@@ -22,8 +22,20 @@
                     <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
                 </div>
 
-                <div class="w-100 mh-100" style="padding-top:15px; text-align:right;">
-                    <button type="submit" class="btn btn-primary">Edit Journal</button>
+                <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
+                    <div class="dropdown" style="display:inline;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Entry.Status.Value
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
+                            @foreach (var status in Statuses)
+                            {
+                                <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
+                            }
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="display:inline;">Edit Journal</button>
                 </div>
             </div>
         </div>
@@ -40,10 +52,13 @@ else
     public Guid EntryId { get; set; }
 
     private JournalEntry Entry { get; set; }
+    private List<JournalStatus> Statuses { get; set; }
     private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
 
     protected override async Task OnInitializedAsync()
     {
+        Statuses = (await DataApi.GetJournalStatusesAsync()).ToList();
+
         if (EntryId != Guid.Empty)
         {
             Entry = await DataApi.GetJournalEntryAsync(EntryId);
@@ -60,5 +75,10 @@ else
         await DataApi.EditJournalEntryAsync(EntryId, Entry);
 
         NavigationManager.NavigateTo($"/ViewJournal?journalId={EntryId}");
+    }
+
+    private void OnMenuItemSelected(JournalStatus status)
+    {
+        Entry.Status = status;
     }
 }

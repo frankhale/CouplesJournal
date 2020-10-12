@@ -105,6 +105,17 @@ namespace CouplesJournal.Data.API
         public async Task<IEnumerable<JournalEntry>> GetJournalEntriesAsync()
         {
             return await _db.JournalEntries
+                            .Include(x => x.Status)
+                            .Where(x => x.Status.Value.ToLower() != "draft")
+                            .OrderByDescending(x => x.UpdatedOn)
+                            .ToListAsync();
+        }
+
+        public async Task<IEnumerable<JournalEntry>> GetMyJournalEntriesAsync()
+        {
+            return await _db.JournalEntries
+                            .Include(x => x.Status)
+                            .Where(x => x.UserName == _httpContext.HttpContext.User.Identity.Name)
                             .OrderByDescending(x => x.UpdatedOn)
                             .ToListAsync();
         }

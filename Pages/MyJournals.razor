@@ -1,0 +1,29 @@
+@page "/MyJournals"
+
+@attribute [Authorize(Roles = "Contributor")]
+
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
+
+@inject ICouplesJournalDataApi DataApi
+
+<h3>My Journal Entries</h3>
+
+@if(Entries.Any())
+{
+    <JournalList Entries=@Entries />
+}
+else
+{
+    <span>You do not have any journal entries yet.</span>
+}
+
+@code
+{
+    private List<JournalEntry> Entries { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Entries = (await DataApi.GetMyJournalEntriesAsync()).ToList();
+    }
+}
