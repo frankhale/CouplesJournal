@@ -1,11 +1,15 @@
 ﻿@page "/"
 
-@using Markdig;
-@using CouplesJournal.Helper;
+@using Markdig
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
+@using CouplesJournal.Helper
+
+@inject ICouplesJournalDataApi DataApi
 
 <AuthorizeView>
     <Authorized>
-        A list of recent journals would be listed here...
+        <JournalList Entries=@Entries></JournalList>
     </Authorized>
     <NotAuthorized>
         <div>
@@ -17,4 +21,10 @@
 @code
 {
     public string Welcome => Markdown.ToHtml("***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.");
+    private List<JournalEntry> Entries { get; set; } = new List<JournalEntry>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Entries = (await DataApi.GetJournalEntriesAsync()).ToList();
+    }
 }

@@ -1,0 +1,53 @@
+@namespace CouplesJournal.Components
+
+@using Markdig
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
+@using CouplesJournal.Helper
+
+@inject ICouplesJournalDataApi DataApi
+
+@if(!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mw-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@Entry.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">By: User1</h6>
+                        <p class="card-text">
+                            @(((MarkupString) Markdown.ToHtml(@Entry.Body)).Sanitize())
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <span>@ErrorMessage</span>
+}
+
+@code
+{
+    [Parameter]
+    public Guid EntryId { get; set; }
+
+    private JournalEntry Entry { get; set; }
+    private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (EntryId != Guid.Empty)
+        {
+            Entry = await DataApi.GetJournalEntryAsync(EntryId);
+
+            if (Entry == null)
+            {
+                ErrorMessage = "The journal entry does not exist!";
+            }
+        }
+    }
+}
