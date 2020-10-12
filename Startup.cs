@@ -1,5 +1,6 @@
 using CouplesJournal.Areas.Identity;
 using CouplesJournal.Data;
+using CouplesJournal.Data.API;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,8 @@ namespace CouplesJournal
             services.AddDbContext<CouplesJournalDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("JournalsDbConnection")));
+
+            services.AddScoped<ICouplesJournalDataApi, CouplesJournalDataApi>();
 
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
