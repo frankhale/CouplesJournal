@@ -1,7 +1,10 @@
+@using Microsoft.AspNetCore.Http
+@using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
 
-@inject ICouplesJournalDataApi DataApi
+@inject CouplesJournalDbContext DbContext
+@inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
 
 <EditForm Model="@Entry" OnValidSubmit="@Submit">
@@ -43,14 +46,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Statuses = (await DataApi.GetJournalStatusesAsync()).ToList();
+        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        Statuses = (await api.GetJournalStatusesAsync()).ToList();
 
         Entry.Status = Statuses.FirstOrDefault(x => x.Value == "Draft");
     }
 
     private async Task Submit()
     {
-        await DataApi.AddJournalEntryAsync(Entry);
+        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        await api.AddJournalEntryAsync(Entry);
 
         NavigationManager.NavigateTo($"/ViewJournal?journalId={Entry.Id}");
     }

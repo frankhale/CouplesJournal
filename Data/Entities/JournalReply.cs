@@ -5,6 +5,6 @@ namespace CouplesJournal.Data.Entities
     public class JournalReply : Entity
     {
         [Required]
-        public string Body { get; set; }        
+        public string Body { get; set; }
     }
 }

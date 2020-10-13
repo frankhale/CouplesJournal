@@ -136,7 +136,7 @@ namespace CouplesJournal.Data.API
 
             if (entry != null)
             {
-                SetCreatedUpdated(entry);
+                SetCreatedUpdated(reply);
 
                 entry.Replies.Add(reply);
 

@@ -2,11 +2,9 @@
 
 @attribute [Authorize(Roles = "Contributor")]
 
-@using CouplesJournal.Data.API
 @using Microsoft.AspNetCore.WebUtilities
 
-@inject ICouplesJournalDataApi DataApi
-@inject NavigationManager NavManager
+@inject NavigationManager NavigationManager
 
 <h3>View Journal Entry</h3>
 
@@ -26,7 +24,7 @@ else
 
     protected override void OnInitialized()
     {
-        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("journalId", out var _journalId))
         {
             try

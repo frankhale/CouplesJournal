@@ -1,35 +1,37 @@
+@using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
+@using Microsoft.AspNetCore.Http
 
-@inject ICouplesJournalDataApi DataApi
 @inject NavigationManager NavigationManager
+@inject CouplesJournalDbContext DbContext
+@inject IHttpContextAccessor HttpAccessor
 
 <EditForm Model="@Reply" OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="w-100 mh-100" style="padding-top:15px;">
-                <textarea class="form-control" placeholder="Enter Reply Here..." style="height: 550px;" @bind=@Reply.Body></textarea>
-            </div>
-
-            <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
-                <button type="submit" class="btn btn-primary" style="display:inline;">Submit Reply</button>
-            </div>
+    <div class="w-100 mh-100" style="padding-top:15px;">
+        <textarea class="form-control" placeholder="Enter Reply Here..." style="height: 100px;" @bind=@Reply.Body></textarea>
+        <div style="padding-top:15px; text-align:right">
+            <button type="submit" class="btn btn-primary" style="display:inline;">Submit Reply</button>
         </div>
     </div>
 </EditForm>
 
 @code
 {
-    private JournalEntry Entry = new JournalEntry();
+    [Parameter]
+    public Guid EntryId { get; set; }
+
     private JournalReply Reply = new JournalReply();
 
     private async Task Submit()
     {
-        await DataApi.AddJournalEntryReplyAsync(Entry.Id, Reply);
+        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
 
-        NavigationManager.NavigateTo($"/ViewJournal?journalId={Entry.Id}");
+        await api.AddJournalEntryReplyAsync(EntryId, Reply);
+
+        NavigationManager.NavigateTo($"/ViewJournal?journalId={EntryId}", true);
     }
 }

@@ -38,8 +38,6 @@ namespace CouplesJournal
                 options.UseSqlite(
                     Configuration.GetConnectionString("JournalsDbConnection")));
 
-            services.AddScoped<ICouplesJournalDataApi, CouplesJournalDataApi>();
-
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;

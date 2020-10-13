@@ -2,10 +2,13 @@
 
 @attribute [Authorize(Roles = "Contributor")]
 
+@using Microsoft.AspNetCore.Http
+@using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
 
-@inject ICouplesJournalDataApi DataApi
+@inject CouplesJournalDbContext DbContext
+@inject IHttpContextAccessor HttpAccessor
 
 <h3>My Journal Entries</h3>
 
@@ -24,6 +27,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Entries = (await DataApi.GetMyJournalEntriesAsync()).ToList();
+        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+
+        Entries = (await api.GetMyJournalEntriesAsync()).ToList();
     }
 }

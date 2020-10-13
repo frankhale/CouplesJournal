@@ -1,11 +1,14 @@
 @namespace CouplesJournal.Components
 
 @using Markdig
+@using Microsoft.AspNetCore.Http
+@using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
 @using CouplesJournal.Helper
 
-@inject ICouplesJournalDataApi DataApi
+@inject CouplesJournalDbContext DbContext
+@inject IHttpContextAccessor HttpAccessor
 
 @if(!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -23,17 +26,22 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col mw-100">
+                <JournalReplyAdd EntryId=@Entry.Id />
+            </div>
+        </div>
         @if(Entry.Replies.Any())
         {
             <hr />
             <div class="row">
                 <div class="col mw-100">
-                    @foreach(var reply in Entry.Replies)
+                    @foreach(var reply in Entry.Replies.OrderByDescending(x => x.UpdatedOn))
                     {
-                        <div class="card">
+                        <div class="card" style="margin-top:15px;">
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">by @reply.UserName.Split("@")[0] on @reply.UpdatedOn.ToLongDateString() &#64; @reply.UpdatedOn.ToLongTimeString()</h6>
-                                <p class="card-text">
+                                <p class="card-text" style="margin-top: 15px">
                                     @(((MarkupString) Markdown.ToHtml(@reply.Body)).Sanitize())
                                 </p>
                             </div>
@@ -62,8 +70,9 @@ else
     {
         if (EntryId != Guid.Empty)
         {
-            //Entry = await DataApi.GetJournalEntryAsync(EntryId);
-            Entry = await DataApi.GetJournalEntryWithRepliesAsync(EntryId);
+            var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+
+            Entry = await api.GetJournalEntryWithRepliesAsync(EntryId);
 
             if (Entry == null)
             {
