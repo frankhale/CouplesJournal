@@ -37,8 +37,8 @@ Above and Beyond:
 
 ## Status
 
-Most of the core features are created. Lots of testing still needs to take
-place!
+All features I marked in MVP are done. Next up is code cleanup and to test the
+hell out of this before I put it in production!!!
 
 ## Author(s)
 
