@@ -12,9 +12,9 @@
 
 <h3>My Journal Entries</h3>
 
-@if(Entries.Any())
+@if (Journals.Any())
 {
-    <JournalList Entries=@Entries />
+    <JournalList Journals=@Journals />
 }
 else
 {
@@ -23,12 +23,12 @@ else
 
 @code
 {
-    private List<JournalEntry> Entries { get; set; }
+    private List<JournalEntry> Journals { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
 
-        Entries = (await api.GetMyJournalEntriesAsync()).ToList();
+        Journals = (await api.GetMyJournalEntriesAsync()).ToList();
     }
 }

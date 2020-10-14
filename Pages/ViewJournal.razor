@@ -1,4 +1,4 @@
-@page "/ViewJournal"
+@page "/ViewJournal/{JournalId}"
 
 @attribute [Authorize(Roles = "Contributor")]
 
@@ -8,33 +8,10 @@
 
 <h3>View Journal Entry</h3>
 
-@if(EntryId != Guid.Empty)
-{
-    <JournalView EntryId=@EntryId></JournalView>
-}
-else
-{
-    <span>@ErrorMessage</span>
-}
+<JournalView JournalId=@JournalId></JournalView>
 
 @code
 {
-    private Guid EntryId { get; set; }
-    private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
-
-    protected override void OnInitialized()
-    {
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("journalId", out var _journalId))
-        {
-            try
-            {
-                EntryId = Guid.Parse(_journalId);
-            }
-            catch (Exception e)
-            {
-                ErrorMessage = e.Message;
-            }
-        }
-    }
+    [Parameter]
+    public string JournalId { get; set; }
 }

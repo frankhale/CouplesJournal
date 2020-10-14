@@ -7,41 +7,48 @@
 @inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
 
-<EditForm Model="@Entry" OnValidSubmit="@Submit">
+<EditForm Model=@Journal OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="container-fluid">
         <div class="row">
             <div class="w-100">
-                <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Entry.Title />
+                <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Journal.Title />
             </div>
 
             <div class="w-100 mh-100" style="padding-top:15px;">
-                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
+                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;"
+                @bind=@Journal.Body></textarea>
             </div>
 
             <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
                 <div class="dropdown" style="display:inline;">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @Entry.Status.Value
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @Journal.Status.Value
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                         @foreach (var status in Statuses)
-                        {
-                            <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
-                        }
+                            {
+                                <button class="dropdown-item" type="button"
+                                @onclick="eventArgs => { OnMenuItemSelected(status); }">
+                                    @status.Value
+                                </button>
+                            }
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-primary" style="display:inline;">Add Journal</button>
             </div>
-        </div>
-    </div>
-</EditForm>
 
-@code {
-    private JournalEntry Entry = new JournalEntry();
+        </EditForm>
+
+
+        @code {
+    private JournalEntry Journal = new JournalEntry();
     private List<JournalStatus> Statuses { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -49,19 +56,19 @@
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         Statuses = (await api.GetJournalStatusesAsync()).ToList();
 
-        Entry.Status = Statuses.FirstOrDefault(x => x.Value == "Draft");
+        Journal.Status = Statuses.FirstOrDefault(x => x.Value == "Draft");
     }
 
     private async Task Submit()
     {
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-        await api.AddJournalEntryAsync(Entry);
+        await api.AddJournalEntryAsync(Journal);
 
-        NavigationManager.NavigateTo($"/ViewJournal?journalId={Entry.Id}");
+        NavigationManager.NavigateTo($"/ViewJournal/{Journal.Id}");
     }
 
     private void OnMenuItemSelected(JournalStatus status)
     {
-        Entry.Status = status;
+        Journal.Status = status;
     }
 }

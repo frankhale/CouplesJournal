@@ -12,7 +12,8 @@
     <ValidationSummary />
 
     <div class="w-100 mh-100" style="padding-top:15px;">
-        <textarea class="form-control" placeholder="Enter Reply Here..." style="height: 100px;" @bind=@Reply.Body></textarea>
+        <textarea class="form-control" placeholder="Enter Reply Here..." style="height: 100px;"
+        @bind=@Reply.Body></textarea>
         <div style="padding-top:15px; text-align:right">
             <button type="submit" class="btn btn-primary" style="display:inline;">Submit Reply</button>
         </div>
@@ -22,16 +23,16 @@
 @code
 {
     [Parameter]
-    public Guid EntryId { get; set; }
+    public string JournalId { get; set; }
 
     private JournalReply Reply = new JournalReply();
 
     private async Task Submit()
     {
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        var journalIdGuid = Guid.Parse(JournalId);
+        await api.AddJournalEntryReplyAsync(journalIdGuid, Reply);
 
-        await api.AddJournalEntryReplyAsync(EntryId, Reply);
-
-        NavigationManager.NavigateTo($"/ViewJournal?journalId={EntryId}", true);
+        NavigationManager.NavigateTo($"/ViewJournal/{JournalId.ToString()}", true);
     }
 }

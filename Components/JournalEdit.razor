@@ -9,40 +9,43 @@
 @inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
 
-@if(!string.IsNullOrEmpty(ErrorMessage))
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <EditForm Model="@Entry" OnValidSubmit="@Submit">
+    <EditForm Model=@Journal OnValidSubmit="@Submit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
         <div class="container-fluid">
             <div class="row">
                 <div class="w-100">
-                    <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Entry.Title />
+                    <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Journal.Title />
                 </div>
 
                 <div class="w-100 mh-100" style="padding-top:15px;">
-                    <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;" @bind=@Entry.Body></textarea>
+                    <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;"
+                    @bind=@Journal.Body></textarea>
                 </div>
 
                 <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
                     <div class="dropdown" style="display:inline;">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @Entry.Status.Value
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Journal.Status.Value
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                             @foreach (var status in Statuses)
                             {
-                                <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
+                                <button class="dropdown-item" type="button"
+                                @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
                             }
+                            </div>
                         </div>
-                    </div>
 
-                    <button type="submit" class="btn btn-primary" style="display:inline;">Edit Journal</button>
+                        <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </EditForm>
+        </EditForm>
 }
 else
 {
@@ -52,38 +55,48 @@ else
 @code
 {
     [Parameter]
-    public Guid EntryId { get; set; }
-
-    private JournalEntry Entry { get; set; }
+    public string JournalId { get; set; }
+    private Guid JournalIdGuid { get; set; }
+    private JournalEntry Journal { get; set; }
     private List<JournalStatus> Statuses { get; set; }
     private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
 
     protected override async Task OnInitializedAsync()
     {
-        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-        Statuses = (await api.GetJournalStatusesAsync()).ToList();
-
-        if (EntryId != Guid.Empty)
+        try
         {
-            Entry = await api.GetJournalEntryAsync(EntryId);
+            JournalIdGuid = Guid.Parse(JournalId);
 
-            if (Entry == null)
+            var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+
+            Statuses = (await api.GetJournalStatusesAsync()).ToList();
+            Journal = await api.GetJournalEntryWithRepliesAsync(JournalIdGuid);
+
+            if (Journal == null)
             {
                 ErrorMessage = "The journal entry does not exist!";
             }
+        }
+        catch (FormatException fe)
+        {
+            ErrorMessage = fe.Message;
+        }
+        catch (ArgumentException ae)
+        {
+            ErrorMessage = ae.Message;
         }
     }
 
     private async Task Submit()
     {
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-        await api.EditJournalEntryAsync(EntryId, Entry);
+        await api.EditJournalEntryAsync(JournalIdGuid, Journal);
 
-        NavigationManager.NavigateTo($"/ViewJournal?journalId={EntryId}");
+        NavigationManager.NavigateTo($"/ViewJournal/{JournalId}");
     }
 
     private void OnMenuItemSelected(JournalStatus status)
     {
-        Entry.Status = status;
+        Journal.Status = status;
     }
 }

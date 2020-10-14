@@ -11,19 +11,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col mw-100">
-            @foreach (var entry in Entries)
+            @foreach (var journal in Journals)
             {
-                <div @key=entry class="card" style=@(GetStyle(entry))>
+                <div @key=journal class="card" style=@(GetStyle(journal))>
                     <div class="card-body">
-                        <h5 class="card-title">@entry.Title @EntryStatus</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">by @entry.UserName.Split("@")[0] on @entry.UpdatedOn.ToLongDateString() &#64; @entry.UpdatedOn.ToLongTimeString()</h6>
+                        <h5 class="card-title">@journal.Title @JournalStatus</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
                         <p class="card-text" style="margin-top: 15px">
-                            @(((MarkupString) Markdown.ToHtml($"{new String(entry.Body.Take(250).ToArray())}...")).Sanitize())
+                            @(((MarkupString) Markdown.ToHtml($"{new String(journal.Body.Take(250).ToArray())}...")).Sanitize())
                         </p>
-                        <a href=@($"/ViewJournal?journalId={entry.Id}") class="card-link">Read More...</a>
-                        @if(entry.UserName == HttpAccessor.HttpContext.User.Identity.Name)
+                        <a href=@($"/ViewJournal/{journal.Id}") class="card-link">Read More...</a>
+                        @if(journal.UserName == HttpAccessor.HttpContext.User.Identity.Name)
                         {
-                            <a href=@($"/EditJournal?journalId={entry.Id}") class="card-link">Edit</a>
+                            <a href=@($"/EditJournal/{journal.Id}") class="card-link">Edit</a>
                         }
                     </div>
                 </div>
@@ -34,22 +34,22 @@
 
 @code {
     [Parameter]
-    public List<JournalEntry> Entries { get; set; }
+    public List<JournalEntry> Journals { get; set; }
 
-    private string EntryStatus { get; set; } = "";
+    private string JournalStatus { get; set; } = "";
 
-    private string GetStyle(JournalEntry entry)
+    private string GetStyle(JournalEntry journal)
     {
         var defaultStyle = "margin-bottom: 15px";
         var draftStatusBGColor = "background-color:#F5F6CE";
 
-        if (entry.Status.Value.ToLower() != "draft")
+        if (journal.Status.Value.ToLower() != "draft")
         {
             return $"{defaultStyle}";
         }
         else
         {
-            EntryStatus = $"({entry.Status.Value})";
+            JournalStatus = $"({journal.Status.Value})";
             return $"{defaultStyle};{draftStatusBGColor}";
         }
     }

@@ -1,0 +1,90 @@
+@namespace CouplesJournal.Components
+
+@using Microsoft.AspNetCore.Http
+@using CouplesJournal.Data
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
+
+@inject CouplesJournalDbContext DbContext
+@inject IHttpContextAccessor HttpAccessor
+@inject NavigationManager NavigationManager
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <EditForm Model="@Reply" OnValidSubmit="@Submit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="w-100 mh-100" style="padding-top:15px;">
+                    <textarea class="form-control" placeholder="Enter Journal Reply Here..." style="height: 550px;"
+                    @bind=@Reply.Body></textarea>
+                </div>
+
+                <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
+                    <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <span>@ErrorMessage</span>
+}
+
+@code
+{
+    [Parameter]
+    public string ReplyId { get; set; }
+
+    [Parameter]
+    public string JournalId { get; set; }
+
+    private Guid ReplyIdGuid { get; set; }
+    private Guid JournalIdGuid { get; set; }
+    private JournalEntry Journal { get; set; }
+    private JournalReply Reply { get; set; }
+    private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ReplyIdGuid = Guid.Parse(ReplyId);
+            JournalIdGuid = Guid.Parse(JournalId);
+
+            var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+
+            Journal = await api.GetJournalEntryAsync(JournalIdGuid);
+            Reply = await api.GetJournalEntryReplyAsync(ReplyIdGuid);
+
+            if (Journal == null)
+            {
+                ErrorMessage = "The journal does not exist!";
+            }
+
+            if (Reply == null)
+            {
+                ErrorMessage = "The journal reply does not exist!";
+            }
+        }
+        catch (FormatException fe)
+        {
+            ErrorMessage = fe.Message;
+        }
+        catch (ArgumentException ae)
+        {
+            ErrorMessage = ae.Message;
+        }
+    }
+
+    private async Task Submit()
+    {
+        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        await api.EditJournalEntryReplyAsync(ReplyIdGuid, Reply);
+
+        NavigationManager.NavigateTo($"/ViewJournal/{JournalId}");
+    }
+}

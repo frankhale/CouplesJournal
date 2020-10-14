@@ -10,17 +10,18 @@
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
 
-@if(!string.IsNullOrEmpty(ErrorMessage))
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div class="container-fluid">
         <div class="row">
             <div class="col mw-100">
-                <div class="card" style=@(GetStyle(Entry))>
+                <div class="card" style=@(GetStyle(Journal))>
                     <div class="card-body">
-                        <h5 class="card-title">@Entry.Title @EntryStatus</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">by @Entry.UserName.Split("@")[0] on @Entry.UpdatedOn.ToLongDateString() &#64; @Entry.UpdatedOn.ToLongTimeString()</h6>
+                        <h5 class="card-title">@Journal.Title @EntryStatus</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">by @Journal.UserName.Split("@")[0] on
+                            @Journal.UpdatedOn.ToLongDateString() &#64; @Journal.UpdatedOn.ToLongTimeString()</h6>
                         <p class="card-text" style="margin-top: 15px">
-                            @(((MarkupString) Markdown.ToHtml(@Entry.Body)).Sanitize())
+                            @(((MarkupString) Markdown.ToHtml(@Journal.Body)).Sanitize())
                         </p>
                     </div>
                 </div>
@@ -28,19 +29,30 @@
         </div>
         <div class="row">
             <div class="col mw-100">
-                <JournalReplyAdd EntryId=@Entry.Id />
+                <JournalReplyAdd JournalId=@Journal.Id.ToString() />
             </div>
         </div>
-        @if(Entry.Replies.Any())
+        @if (Journal.Replies.Any())
         {
             <hr />
             <div class="row">
                 <div class="col mw-100">
-                    @foreach(var reply in Entry.Replies.OrderByDescending(x => x.UpdatedOn))
+                    @foreach (var reply in Journal.Replies.OrderByDescending(x => x.UpdatedOn))
                     {
                         <div class="card" style="margin-top:15px;">
                             <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">by @reply.UserName.Split("@")[0] on @reply.UpdatedOn.ToLongDateString() &#64; @reply.UpdatedOn.ToLongTimeString()</h6>
+                                <div class="card-subtitle mb-2 text-muted">
+                                    <span>by @reply.UserName.Split("@")[0] on @reply.UpdatedOn.ToLongDateString()
+                                        &#64;@reply.UpdatedOn.ToLongTimeString()</span>
+
+                                    @if (reply.UserName == HttpAccessor.HttpContext.User.Identity.Name)
+                                    {
+                                        <span>
+                                            &nbsp;<a href=@($"/EditJournalReply/{@Journal.Id}/reply/{reply.Id}")
+                                            class="card-link">Edit</a>
+                                        </span>
+                                    }
+                                </div>
                                 <p class="card-text" style="margin-top: 15px">
                                     @(((MarkupString) Markdown.ToHtml(@reply.Body)).Sanitize())
                                 </p>
@@ -60,21 +72,32 @@ else
 @code
 {
     [Parameter]
-    public Guid EntryId { get; set; }
-
-    private JournalEntry Entry { get; set; }
+    public string JournalId { get; set; }
+    private JournalEntry Journal { get; set; }
     private string EntryStatus { get; set; } = "";
     private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
 
     protected override async Task OnInitializedAsync()
     {
-        if (EntryId != Guid.Empty)
+        if (!string.IsNullOrEmpty(JournalId))
         {
-            var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+            try
+            {
+                var journalIdGuid = Guid.Parse(JournalId);
+                var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
 
-            Entry = await api.GetJournalEntryWithRepliesAsync(EntryId);
+                Journal = await api.GetJournalEntryWithRepliesAsync(journalIdGuid);
+            }
+            catch (FormatException fe)
+            {
+                ErrorMessage = fe.Message;
+            }
+            catch (ArgumentException ae)
+            {
+                ErrorMessage = ae.Message;
+            }
 
-            if (Entry == null)
+            if (Journal == null)
             {
                 ErrorMessage = "The journal entry does not exist!";
             }

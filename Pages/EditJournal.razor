@@ -1,39 +1,13 @@
-@page "/EditJournal"
+@page "/EditJournal/{JournalId}"
 
 @attribute [Authorize(Roles = "Contributor")]
 
-@using Microsoft.AspNetCore.WebUtilities
-@inject NavigationManager NavManager
-
 <h3>Edit Journal Entry</h3>
 
-@if(EntryId != Guid.Empty)
-{
-    <JournalEdit EntryId=@EntryId></JournalEdit>
-}
-else
-{
-    <span>@ErrorMessage</span>
-}
+<JournalEdit JournalId=@JournalId></JournalEdit>
 
 @code
 {
-    private Guid EntryId { get; set; }
-    private string ErrorMessage { get; set; } = "Entry Id cannot be an empty Guid";
-
-    protected override void OnInitialized()
-    {
-        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
-        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("journalId", out var _journalId))
-        {
-            try
-            {
-                EntryId = Guid.Parse(_journalId);
-            }
-            catch (Exception e)
-            {
-                ErrorMessage = e.Message;
-            }
-        }
-    }
+    [Parameter]
+    public string JournalId { get; set; }
 }

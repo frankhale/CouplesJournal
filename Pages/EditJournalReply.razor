@@ -1,0 +1,16 @@
+@page "/EditJournalReply/{JournalId}/reply/{ReplyId}"
+
+@attribute [Authorize(Roles = "Contributor")]
+
+<h3>Edit Journal Reply</h3>
+
+<JournalReplyEdit JournalId=@JournalId ReplyId=@ReplyId></JournalReplyEdit>
+
+@code
+{
+    [Parameter]
+    public string ReplyId { get; set; }
+
+    [Parameter]
+    public string JournalId { get; set; }
+}
