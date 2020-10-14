@@ -19,7 +19,7 @@ namespace CouplesJournal.Data.API
         Task<IEnumerable<JournalEntry>> GetJournalEntriesAsync();
         Task<JournalEntry> GetJournalEntryWithRepliesAsync(Guid entryId);
         Task<IEnumerable<JournalEntry>> GetMyJournalEntriesAsync();
-        Task DeleteJournalEntry(Guid entryId);
+        Task DeleteJournalEntryAsync(Guid entryId);
         #endregion
 
         #region Journal Reply
@@ -27,7 +27,7 @@ namespace CouplesJournal.Data.API
         Task EditJournalEntryReplyAsync(Guid entryId, JournalReply reply);
         Task<JournalReply> GetJournalEntryReplyAsync(Guid entryId);
         Task<IEnumerable<JournalReply>> GetJournalEntryRepliesAsync();
-        Task DeleteJournalReply(Guid entryId);
+        Task DeleteJournalReplyAsync(Guid entryId);
         #endregion
 
         #region Journal Status

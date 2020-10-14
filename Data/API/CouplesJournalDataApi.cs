@@ -128,7 +128,7 @@ namespace CouplesJournal.Data.API
                             .FirstOrDefaultAsync(x => x.Id == entryId);
         }
 
-        public async Task DeleteJournalEntry(Guid entryId)
+        public async Task DeleteJournalEntryAsync(Guid entryId)
         {
             var journalEntry = await _db.JournalEntries.FirstOrDefaultAsync(x => x.Id == entryId);
 
@@ -182,7 +182,7 @@ namespace CouplesJournal.Data.API
             return await _db.JournalReplies.OrderByDescending(x => x.UpdatedOn).ToListAsync();
         }
 
-        public async Task DeleteJournalReply(Guid entryId)
+        public async Task DeleteJournalReplyAsync(Guid entryId)
         {
             var replyEntry = await _db.JournalReplies.FirstOrDefaultAsync(x => x.Id == entryId);
 

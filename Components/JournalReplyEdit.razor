@@ -8,6 +8,7 @@
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -17,13 +18,18 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="w-100 mh-100" style="padding-top:15px;">
+                <div class="w-100" style="padding-top:15px;">
                     <textarea class="form-control" placeholder="Enter Journal Reply Here..." style="height: 550px;"
                     @bind=@Reply.Body></textarea>
                 </div>
+            </div>
 
-                <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
-                    <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+            <div class="row" style="padding-top:15px;">
+                <div class="col">
+                    <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
+                </div>
+                <div class="col" style="text-align:right;">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
@@ -86,5 +92,16 @@ else
         await api.EditJournalEntryReplyAsync(ReplyIdGuid, Reply);
 
         NavigationManager.NavigateTo($"/ViewJournal/{JournalId}");
+    }
+
+    private async Task OnDeleteButtonClicked()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+            await api.DeleteJournalReplyAsync(ReplyIdGuid);
+            NavigationManager.NavigateTo($"/ViewJournal/{JournalId}", true);
+        }
     }
 }

@@ -28,14 +28,12 @@
                     </textarea>
                 </div>
             </div>
-        </div>
 
-        <div class="container-fluid" style="padding-top:15px;">
-            <div class="row">
+            <div class="row" style="padding-top:15px;">
                 <div class="col">
                     <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
                 </div>
-                <div class="col" style="text-align:right;">
+                <div class="col" style="text-align:right;display:inline;">
                     <div style="display:inline;">
                         <div class="dropdown" style="display:inline;">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
@@ -116,8 +114,8 @@ else
         if (confirmed)
         {
             var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-            await api.DeleteJournalEntry(JournalIdGuid);
-            NavigationManager.NavigateTo($"/");
+            await api.DeleteJournalEntryAsync(JournalIdGuid);
+            NavigationManager.NavigateTo("/", true);
         }
     }
 }
