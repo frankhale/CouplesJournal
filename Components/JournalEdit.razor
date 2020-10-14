@@ -8,6 +8,7 @@
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -21,27 +22,37 @@
                     <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Journal.Title />
                 </div>
 
-                <div class="w-100 mh-100" style="padding-top:15px;">
+                <div class="w-100" style="padding-top:15px;">
                     <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;"
-                    @bind=@Journal.Body></textarea>
+                    @bind=@Journal.Body>
+                    </textarea>
                 </div>
+            </div>
+        </div>
 
-                <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
-                    <div class="dropdown" style="display:inline;">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @Journal.Status.Value
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
-                            @foreach (var status in Statuses)
-                            {
-                                <button class="dropdown-item" type="button"
-                                @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
-                            }
+        <div class="container-fluid" style="padding-top:15px;">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
+                </div>
+                <div class="col" style="text-align:right;">
+                    <div style="display:inline;">
+                        <div class="dropdown" style="display:inline;">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @Journal.Status.Value
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
+                                @foreach (var status in Statuses)
+                                {
+                                    <button class="dropdown-item" type="button"
+                                    @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
+                                }
+                                </div>
                             </div>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+                            <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,7 +97,6 @@ else
             ErrorMessage = ae.Message;
         }
     }
-
     private async Task Submit()
     {
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
@@ -98,5 +108,16 @@ else
     private void OnMenuItemSelected(JournalStatus status)
     {
         Journal.Status = status;
+    }
+
+    private async Task OnDeleteButtonClicked()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+            await api.DeleteJournalEntry(JournalIdGuid);
+            NavigationManager.NavigateTo($"/");
+        }
     }
 }

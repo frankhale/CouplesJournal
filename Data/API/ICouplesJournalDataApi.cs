@@ -19,13 +19,15 @@ namespace CouplesJournal.Data.API
         Task<IEnumerable<JournalEntry>> GetJournalEntriesAsync();
         Task<JournalEntry> GetJournalEntryWithRepliesAsync(Guid entryId);
         Task<IEnumerable<JournalEntry>> GetMyJournalEntriesAsync();
+        Task DeleteJournalEntry(Guid entryId);
         #endregion
 
-        #region Journal Entry
+        #region Journal Reply
         Task AddJournalEntryReplyAsync(Guid entryId, JournalReply reply);
         Task EditJournalEntryReplyAsync(Guid entryId, JournalReply reply);
         Task<JournalReply> GetJournalEntryReplyAsync(Guid entryId);
         Task<IEnumerable<JournalReply>> GetJournalEntryRepliesAsync();
+        Task DeleteJournalReply(Guid entryId);
         #endregion
 
         #region Journal Status

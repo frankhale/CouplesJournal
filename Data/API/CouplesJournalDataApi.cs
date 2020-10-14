@@ -127,6 +127,20 @@ namespace CouplesJournal.Data.API
                             .Include(x => x.Replies)
                             .FirstOrDefaultAsync(x => x.Id == entryId);
         }
+
+        public async Task DeleteJournalEntry(Guid entryId)
+        {
+            var journalEntry = await _db.JournalEntries.FirstOrDefaultAsync(x => x.Id == entryId);
+
+            if (journalEntry != null)
+            {
+                SetCreatedUpdated(journalEntry);
+
+                journalEntry.MarkedForDeletion = true;
+
+                await _db.SaveChangesAsync();
+            }
+        }
         #endregion
 
         #region Journal Reply
@@ -166,6 +180,20 @@ namespace CouplesJournal.Data.API
         public async Task<IEnumerable<JournalReply>> GetJournalEntryRepliesAsync()
         {
             return await _db.JournalReplies.OrderByDescending(x => x.UpdatedOn).ToListAsync();
+        }
+
+        public async Task DeleteJournalReply(Guid entryId)
+        {
+            var replyEntry = await _db.JournalReplies.FirstOrDefaultAsync(x => x.Id == entryId);
+
+            if (replyEntry != null)
+            {
+                SetCreatedUpdated(replyEntry);
+
+                replyEntry.MarkedForDeletion = true;
+
+                await _db.SaveChangesAsync();
+            }
         }
         #endregion
 

@@ -18,6 +18,9 @@ namespace CouplesJournal.Data
                 new JournalStatus { Id = 1, Value = "Draft" },
                 new JournalStatus { Id = 2, Value = "Final" }
             });
+
+            modelBuilder.Entity<JournalEntry>().HasQueryFilter(x => !x.MarkedForDeletion);
+            modelBuilder.Entity<JournalReply>().HasQueryFilter(x => !x.MarkedForDeletion);
         }
     }
 }
