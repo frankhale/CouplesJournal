@@ -32,12 +32,11 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                         @foreach (var status in Statuses)
-                            {
-                        <button class="dropdown-item" type="button"
-                        @onclick="eventArgs => { OnMenuItemSelected(status); }">
-                            @status.Value
-                        </button>
-                                    }
+                        {
+                            <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(status); }">
+                                @status.Value
+                            </button>
+                        }
                     </div>
                 </div>
 
@@ -80,7 +79,7 @@
         }
 
         timer = new Timer(5000);
-        timer.Elapsed += new ElapsedEventHandler(SaveJournalToLocalStorage);        
+        timer.Elapsed += new ElapsedEventHandler(SaveJournalToLocalStorage);
         timer.Enabled = true;
     }
 
@@ -95,11 +94,11 @@
     private async Task Submit()
     {
         timer.Enabled = false;
-        
+
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         await api.AddJournalEntryAsync(Journal);
 
-        await localStorage.RemoveItemAsync("journal");              
+        await localStorage.RemoveItemAsync("journal");
 
         NavigationManager.NavigateTo($"/ViewJournal/{Journal.Id}");
     }

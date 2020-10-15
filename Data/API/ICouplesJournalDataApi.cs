@@ -9,8 +9,9 @@ namespace CouplesJournal.Data.API
     interface ICouplesJournalDataApi
     {
         Task<bool> SaveChangesAsync();
-        void Add<T>(T entity) where T : class;
-        void Delete<T>(T entity) where T : class;
+        void Add<T>(T entity) where T : Entity;
+        void Delete<T>(T entity) where T : Entity;
+        Task<IEnumerable<T>> GetPagedResultsAsync<T>(int pageNumber, int pageSize) where T : Entity;
 
         #region Journal
         Task AddJournalEntryAsync(JournalEntry entry);

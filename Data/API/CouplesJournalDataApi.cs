@@ -50,14 +50,21 @@ namespace CouplesJournal.Data.API
             return (await _db.SaveChangesAsync()) > 0;
         }
 
-        public void Add<T>(T entity) where T : class
+        public void Add<T>(T entity) where T : Entity
         {
             _db.Add(entity);
         }
 
-        public void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity) where T : Entity
         {
             _db.Remove(entity);
+        }
+
+        public async Task<IEnumerable<T>> GetPagedResultsAsync<T>(int pageNumber, int pageSize) where T : Entity
+        {
+            var query = _db.Set<T>().Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return await query.ToListAsync();
         }
 
         private void SetCreatedUpdated<T>(T entry) where T : Entity

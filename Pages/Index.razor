@@ -10,7 +10,7 @@
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
 
-<AuthorizeView>
+<AuthorizeView Roles="Contributor">
     <Authorized>
         @if(Journals.Any(x => x.Status.Value.ToLower() == "final"))
         {
