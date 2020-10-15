@@ -19,5 +19,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-rc.1.20451.14"/>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0-rc.1.20453.2"/>
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0"/>
+    <PackageReference Include="Blazored.LocalStorage" Version="3.0.0"/>
   </ItemGroup>
 </Project>

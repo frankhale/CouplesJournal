@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using CouplesJournal.Areas.Identity;
 using CouplesJournal.Data;
 using CouplesJournal.Data.API;
@@ -46,6 +47,7 @@ namespace CouplesJournal
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddBlazoredLocalStorage();
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
@@ -56,6 +58,12 @@ namespace CouplesJournal
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
+            var journalDbContext = serviceProvider.GetService<CouplesJournalDbContext>();
+            var userDbContext = serviceProvider.GetService<ApplicationDbContext>();
+
+            journalDbContext.Database.Migrate();
+            userDbContext.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
