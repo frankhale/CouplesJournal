@@ -1,0 +1,29 @@
+@using Microsoft.AspNetCore.Http
+@using CouplesJournal.Data
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
+
+@inject CouplesJournalDbContext DbContext
+@inject IHttpContextAccessor HttpAccessor
+
+@code
+{
+    // TODO: We really want to make this a generic component that can page
+    // anything we want. Instead of doing that now we'll just make it page
+    // journal entries. Later we can make it generic!!!
+
+    [Parameter]
+    public RenderFragment<List<JournalEntry>> Content { get; set; }
+
+    [Parameter]
+    private int PageNumber { get; set; }
+
+    [Parameter]
+    private int PageSize { get; set; }
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+    // FINISH LATER
+    //}
+}
