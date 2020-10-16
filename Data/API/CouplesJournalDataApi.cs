@@ -81,6 +81,11 @@ namespace CouplesJournal.Data.API
         #endregion
 
         #region Journal
+        public int GetTotalJournals()
+        {
+            return _db.JournalEntries.Count();
+        }
+
         public async Task AddJournalEntryAsync(JournalEntry entry)
         {
             SetCreatedUpdated(entry);

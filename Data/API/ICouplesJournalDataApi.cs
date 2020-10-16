@@ -14,6 +14,7 @@ namespace CouplesJournal.Data.API
         Task<IEnumerable<T>> GetPagedResultsAsync<T>(int pageNumber, int pageSize) where T : Entity;
 
         #region Journal
+        int GetTotalJournals();
         Task AddJournalEntryAsync(JournalEntry entry);
         Task EditJournalEntryAsync(Guid entryId, JournalEntry entry);
         Task<JournalEntry> GetJournalEntryAsync(Guid entryId);
