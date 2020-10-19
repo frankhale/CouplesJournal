@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CouplesJournal.Migrations.CouplesJournalDb
 {
     [DbContext(typeof(CouplesJournalDbContext))]
-    [Migration("20201005011433_AddCreatedByAndUpdatedByToEntities")]
-    partial class AddCreatedByAndUpdatedByToEntities
+    [Migration("20201019024112_InitialDbModel")]
+    partial class InitialDbModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,13 +25,24 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Body")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("JournalStatusId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("MarkedForDeletion")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -41,7 +52,14 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("fk_journalstatus")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("JournalStatusId");
+
+                    b.HasIndex("fk_journalstatus");
 
                     b.ToTable("JournalEntries");
                 });
@@ -53,12 +71,19 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Body")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("JournalEntryId")
+                    b.Property<Guid>("JournalEntryId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("MarkedForDeletion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -68,18 +93,68 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("fk_journalentry")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("JournalEntryId");
 
+                    b.HasIndex("fk_journalentry");
+
                     b.ToTable("JournalReplies");
+                });
+
+            modelBuilder.Entity("CouplesJournal.Data.Entities.JournalStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JournalStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Value = "Draft"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Value = "Final"
+                        });
+                });
+
+            modelBuilder.Entity("CouplesJournal.Data.Entities.JournalEntry", b =>
+                {
+                    b.HasOne("CouplesJournal.Data.Entities.JournalStatus", null)
+                        .WithMany()
+                        .HasForeignKey("JournalStatusId");
+
+                    b.HasOne("CouplesJournal.Data.Entities.JournalStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("fk_journalstatus");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("CouplesJournal.Data.Entities.JournalReply", b =>
                 {
                     b.HasOne("CouplesJournal.Data.Entities.JournalEntry", null)
+                        .WithMany()
+                        .HasForeignKey("JournalEntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CouplesJournal.Data.Entities.JournalEntry", null)
                         .WithMany("Replies")
-                        .HasForeignKey("JournalEntryId");
+                        .HasForeignKey("fk_journalentry");
                 });
 
             modelBuilder.Entity("CouplesJournal.Data.Entities.JournalEntry", b =>

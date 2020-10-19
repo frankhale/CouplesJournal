@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CouplesJournal.Data.Entities
 {
@@ -9,8 +10,10 @@ namespace CouplesJournal.Data.Entities
         [Required]
         public string Title { get; set; }
         [Required]
-        public string Body { get; set; }
+        public string Body { get; set; }          
+        [ForeignKey("fk_journalstatus")]
         public JournalStatus Status { get; set; }
+        [ForeignKey("fk_journalentry")]
         public ICollection<JournalReply> Replies { get; set; } = new List<JournalReply>();
     }
 }

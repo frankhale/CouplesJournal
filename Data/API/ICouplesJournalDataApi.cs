@@ -11,9 +11,10 @@ namespace CouplesJournal.Data.API
         Task<bool> SaveChangesAsync();
         void Add<T>(T entity) where T : Entity;
         void Delete<T>(T entity) where T : Entity;
-        Task<IEnumerable<T>> GetPagedResultsAsync<T>(int pageNumber, int pageSize) where T : Entity;
 
         #region Journal
+        Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize);
+        bool HasJournalsToView();
         int GetTotalJournals();
         Task AddJournalEntryAsync(JournalEntry entry);
         Task EditJournalEntryAsync(Guid entryId, JournalEntry entry);

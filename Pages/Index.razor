@@ -1,4 +1,5 @@
 ﻿@page "/"
+@page "/page/{PageNumber:int}"
 
 @using Markdig
 @using Microsoft.AspNetCore.Http
@@ -12,9 +13,13 @@
 
 <AuthorizeView Roles="Contributor">
     <Authorized>
-        @if(Journals.Any(x => x.Status.Value.ToLower() == "final"))
+        @if (HasJournals)
         {
-            <JournalList Journals=@Journals />
+            <JournalPagination PageNumber=@PageNumber.Value PageSize=5>
+                <Content Context="journals">
+                    <JournalList Journals=@journals />
+                </Content>
+            </JournalPagination>
         }
         else
         {
@@ -30,13 +35,23 @@
 
 @code
 {
-    public string Welcome => Markdown.ToHtml("***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.");
-    private List<JournalEntry> Journals { get; set; } = new List<JournalEntry>();
+    [Parameter]
+    public int? PageNumber { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    public string Welcome => Markdown.ToHtml("***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.");
+    private bool HasJournals { get; set; }
+
+    protected override void OnInitialized()
     {
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        HasJournals = api.HasJournalsToView();
+    }
 
-        Journals = (await api.GetJournalEntriesAsync()).ToList();
+    protected override void OnParametersSet()
+    {
+        if (PageNumber == null || !PageNumber.HasValue)
+        {
+            PageNumber = 1;
+        }
     }
 }

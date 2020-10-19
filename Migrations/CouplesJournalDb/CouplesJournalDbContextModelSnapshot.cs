@@ -29,10 +29,10 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("MarkedForDeletion")
+                    b.Property<int?>("JournalStatusId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<bool>("MarkedForDeletion")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -50,9 +50,14 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("fk_journalstatus")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("JournalStatusId");
+
+                    b.HasIndex("fk_journalstatus");
 
                     b.ToTable("JournalEntries");
                 });
@@ -70,7 +75,7 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("JournalEntryId")
+                    b.Property<Guid>("JournalEntryId")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("MarkedForDeletion")
@@ -86,9 +91,14 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("fk_journalentry")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("JournalEntryId");
+
+                    b.HasIndex("fk_journalentry");
 
                     b.ToTable("JournalReplies");
                 });
@@ -121,9 +131,13 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
 
             modelBuilder.Entity("CouplesJournal.Data.Entities.JournalEntry", b =>
                 {
+                    b.HasOne("CouplesJournal.Data.Entities.JournalStatus", null)
+                        .WithMany()
+                        .HasForeignKey("JournalStatusId");
+
                     b.HasOne("CouplesJournal.Data.Entities.JournalStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("fk_journalstatus");
 
                     b.Navigation("Status");
                 });
@@ -131,8 +145,14 @@ namespace CouplesJournal.Migrations.CouplesJournalDb
             modelBuilder.Entity("CouplesJournal.Data.Entities.JournalReply", b =>
                 {
                     b.HasOne("CouplesJournal.Data.Entities.JournalEntry", null)
+                        .WithMany()
+                        .HasForeignKey("JournalEntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CouplesJournal.Data.Entities.JournalEntry", null)
                         .WithMany("Replies")
-                        .HasForeignKey("JournalEntryId");
+                        .HasForeignKey("fk_journalentry");
                 });
 
             modelBuilder.Entity("CouplesJournal.Data.Entities.JournalEntry", b =>

@@ -60,13 +60,6 @@ namespace CouplesJournal.Data.API
             _db.Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> GetPagedResultsAsync<T>(int pageNumber, int pageSize) where T : Entity
-        {
-            var query = _db.Set<T>().Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
-            return await query.ToListAsync();
-        }
-
         private void SetCreatedUpdated<T>(T entry) where T : Entity
         {
             if (entry.CreatedOn == DateTime.MinValue)
@@ -81,6 +74,21 @@ namespace CouplesJournal.Data.API
         #endregion
 
         #region Journal
+        public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize)
+        {
+            var query = _db.JournalEntries.Include(x => x.Status)
+                                          .OrderByDescending(x => x.UpdatedOn)
+                                          .Skip((pageNumber - 1) * pageSize)
+                                          .Take(pageSize);
+
+            return await query.ToListAsync();
+        }
+
+        public bool HasJournalsToView()
+        {
+            return _db.JournalEntries.Any(x => x.Status.Value.ToLower() == "final");
+        }
+
         public int GetTotalJournals()
         {
             return _db.JournalEntries.Count();
