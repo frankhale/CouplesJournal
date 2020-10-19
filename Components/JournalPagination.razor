@@ -13,17 +13,15 @@
         </div>
     </div>
     <div class="row">
-        <div class="col" style="text-align: center;">
-            <nav aria-label="Journal Navigation">
-                <ul class="pagination">
-                    @foreach (var x in Enumerable.Range(1, TotalPages))
-                    {
-                        <li key=x class="page-item @(PageNumber == x ? "active" : "")">
-                            <a class="page-link" href=@($"/page/{x}")>@x</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
+        <div class="col">
+            <ul class="pagination" style="justify-content: center;">
+                @foreach (var x in Enumerable.Range(1, TotalPages))
+                {
+                    <li key=x class="page-item @(PageNumber == x ? "active" : "")">
+                        <a class="page-link" href=@($"/page/{x}")>@x</a>
+                    </li>
+                }
+            </ul>
         </div>
     </div>
 </div>
