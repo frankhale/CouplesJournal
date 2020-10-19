@@ -1,21 +1,5 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+# https://www.davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
+*    text=auto
 
-# Custom for Visual Studio
-*.cs     linguist-language=csharp
-*.razor  linguist-language=csharp
-*.html   linguist-detectable=false
-*.css    linguist-detectable=false
-*.js     linguist-detectable=false
-
-# Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+*.cs text diff=csharp
