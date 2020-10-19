@@ -4,6 +4,6 @@
 # Custom for Visual Studio
 *.cs     linguist-language=csharp
 *.razor  linguist-language=csharp
-*.html   export-ignore
-*.css    export-ignore
-*.js     export-ignore
+*.html   linguist-language=csharp
+*.css    linguist-language=csharp
+*.js     linguist-language=csharp
