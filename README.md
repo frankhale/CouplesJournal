@@ -27,7 +27,7 @@ Minimum Viable Product:
 - [x] As a user I should be able to reply to a journal entries written by my partner
 - [x] As a user I should be able to delete a journal entry that I wrote
 - [x] As a user I should be able to delete a reply that I wrote
-- [ ] As a user I should be able to page journal results
+- [x] As a user I should be able to page journal results
 
 Above and Beyond:
 
@@ -49,4 +49,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-15 October 2020
+19 October 2020
