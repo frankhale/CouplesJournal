@@ -2,6 +2,9 @@
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
+@using System.Linq
+@using System.Collections.Generic
+@using CouplesJournal.Helper
 
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
@@ -15,12 +18,24 @@
     <div class="row">
         <div class="col">
             <ul class="pagination" style="justify-content: center;">
-                @foreach (var x in Enumerable.Range(1, TotalPages))
+                <li class="page-item @(PreviousButtonDisabled ? "disabled" : "")">
+                    <button class="page-link" aria-label="Previous" @onclick=@OnPreviousButtonClick>
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+
+                @foreach (var x in PageLinkRange[CurrentPageOfLinks])
                 {
-                    <li key=x class="page-item @(PageNumber == x ? "active" : "")">
-                        <a class="page-link" href=@($"/page/{x}")>@x</a>
-                    </li>
+                <li key=x class="page-item @(PageNumber == x ? "active" : "")">
+                    <a class="page-link" href=@($"/page/{x}")>@x</a>
+                </li>
                 }
+
+                <li class="page-item @(NextButtonDisabled ? "disabled" : "")">
+                    <button class="page-link" aria-label="Next" @onclick=@OnNextButtonClick>
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
             </ul>
         </div>
     </div>
@@ -37,14 +52,27 @@
     [Parameter]
     public int PageSize { get; set; }
 
-    private int TotalPages { get; set; }
+    [Parameter]
+    public int MaxPageLinks { get; set; }
 
     private List<JournalEntry> Journals { get; set; }
+    private int TotalPages { get; set; }
+    private int CurrentPageOfLinks { get; set; }
+    private List<List<int>> PageLinkRange { get; set; }
+    private bool PreviousButtonDisabled { get; set; } = true;
+    private bool NextButtonDisabled { get; set; } = true;
+    private int TotalJournals { get; set; }
+
 
     protected override void OnInitialized()
     {
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-        TotalPages = api.GetTotalJournals() / PageSize;
+        TotalJournals = api.GetTotalJournals();
+        TotalPages = TotalJournals / PageSize;
+        PageLinkRange = Enumerable.Range(1, TotalPages).ToList().ChunkBy(MaxPageLinks);
+        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
+
+        ToggleNextPreviousButtons();
 
         StateHasChanged();
     }
@@ -55,4 +83,46 @@
         Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
     }
 
+    private async Task OnPreviousButtonClick()
+    {
+        PageNumber -= 1;
+        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
+
+        ToggleNextPreviousButtons();
+
+        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
+        StateHasChanged();
+    }
+
+    private async Task OnNextButtonClick()
+    {
+        PageNumber += 1;
+        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
+
+        ToggleNextPreviousButtons();
+
+        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
+        StateHasChanged();
+    }
+
+    private void ToggleNextPreviousButtons()
+    {
+        if (CurrentPageOfLinks < 0)
+        {
+            CurrentPageOfLinks = 0;
+            PreviousButtonDisabled = true;
+        }
+
+        if (CurrentPageOfLinks >= 0 && CurrentPageOfLinks < PageLinkRange.Count() - 1)
+        {
+            NextButtonDisabled = false;            
+        }
+        else 
+        {
+            PreviousButtonDisabled = false;
+            NextButtonDisabled = true;
+        }
+    }
 }

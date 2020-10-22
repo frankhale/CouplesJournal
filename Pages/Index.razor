@@ -5,7 +5,6 @@
 @using Microsoft.AspNetCore.Http
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
-@using CouplesJournal.Data.Entities
 @using CouplesJournal.Helper
 
 @inject CouplesJournalDbContext DbContext
@@ -15,7 +14,7 @@
     <Authorized>
         @if (HasJournals)
         {
-            <JournalPagination PageNumber=@PageNumber.Value PageSize=5>
+            <JournalPagination PageNumber=@PageNumber.Value PageSize=2 MaxPageLinks=2>
                 <Content Context="journals">
                     <JournalList Journals=@journals />
                 </Content>
@@ -51,7 +50,7 @@
     {
         if (PageNumber == null || !PageNumber.HasValue)
         {
-            PageNumber = 1;
+            PageNumber = 0;
         }
     }
 }
