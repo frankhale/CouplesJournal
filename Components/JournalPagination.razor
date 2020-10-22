@@ -79,6 +79,11 @@
 
     protected async override Task OnParametersSetAsync()
     {
+        if (PageNumber == 0)
+        {
+            PageNumber = 1;
+        }
+
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
     }
@@ -114,14 +119,17 @@
             CurrentPageOfLinks = 0;
             PreviousButtonDisabled = true;
         }
+        else
+        {
+            PreviousButtonDisabled = false;
+        }
 
         if (CurrentPageOfLinks >= 0 && CurrentPageOfLinks < PageLinkRange.Count() - 1)
         {
             NextButtonDisabled = false;            
         }
-        else 
-        {
-            PreviousButtonDisabled = false;
+        else
+        {            
             NextButtonDisabled = true;
         }
     }
