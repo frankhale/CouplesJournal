@@ -92,29 +92,19 @@
     private async Task OnPreviousButtonClick()
     {
         PageNumber -= 1;
-        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
-
-        ToggleNextPreviousButtons();
-
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
-        StateHasChanged();
+        await ToggleNextPreviousButtons();
     }
 
     private async Task OnNextButtonClick()
     {
         PageNumber += 1;
-        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
-
-        ToggleNextPreviousButtons();
-
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
-        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
-        StateHasChanged();
+        await ToggleNextPreviousButtons();
     }
 
-    private void ToggleNextPreviousButtons()
+    private async Task ToggleNextPreviousButtons()
     {
+        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
+
         if (PageNumber == 1 || CurrentPageOfLinks < 0)
         {
             CurrentPageOfLinks = 0;
@@ -133,5 +123,9 @@
         {
             NextButtonDisabled = true;
         }
+
+        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
+        StateHasChanged();
     }
 }
