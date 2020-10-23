@@ -172,6 +172,8 @@ namespace CouplesJournal.Data.API
             {
                 SetCreatedUpdated(reply);
 
+                reply.JournalEntryId = entryId;
+
                 entry.Replies.Add(reply);
 
                 await SaveChangesAsync();

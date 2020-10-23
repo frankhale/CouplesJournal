@@ -62,13 +62,14 @@
     private bool PreviousButtonDisabled { get; set; } = true;
     private bool NextButtonDisabled { get; set; } = true;
     private int TotalJournals { get; set; }
-
+    private int JournalRemainder { get; set; }
 
     protected override void OnInitialized()
     {
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         TotalJournals = api.GetTotalJournals();
-        TotalPages = TotalJournals / PageSize;
+        JournalRemainder = TotalJournals % PageSize;
+        TotalPages = (TotalJournals / PageSize) + JournalRemainder;
         PageLinkRange = Enumerable.Range(1, TotalPages).ToList().ChunkBy(MaxPageLinks);
         CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
 
@@ -123,13 +124,13 @@
         {
             PreviousButtonDisabled = false;
         }
-
-        if (CurrentPageOfLinks >= 0 && CurrentPageOfLinks < PageLinkRange.Count() - 1)
+        
+        if (CurrentPageOfLinks >= 0 && PageNumber < TotalPages)
         {
-            NextButtonDisabled = false;            
+            NextButtonDisabled = false;
         }
         else
-        {            
+        {
             NextButtonDisabled = true;
         }
     }
