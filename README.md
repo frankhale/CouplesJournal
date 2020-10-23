@@ -38,6 +38,16 @@ Above and Beyond:
 - As a user I should be able to confirm my account via email (currently there is a
   button to fake this) when registering
 
+Raspberry Pi Setup:
+
+- [ ] Set up SD card with Ubuntu 20.10 server
+- [ ] Configure OS, get latest updates, etc...
+- [ ] Enable SSH
+- [ ] Install .NET 5
+- [ ] Punch hole in firewall to allow port 80/443 traffic
+- [ ] Set up nginx (need to figure out how to use self signed cert for 443 traffic)
+- [ ] Figure out how to run web app forever (if it crashes, restart it)
+
 ## Status
 
 All features I marked in MVP are done. Next up is code cleanup and to test the
@@ -49,4 +59,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-21 October 2020
+23 October 2020
