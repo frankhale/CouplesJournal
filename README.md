@@ -31,11 +31,11 @@ Minimum Viable Product:
 
 Above and Beyond:
 
-- As a user I should be able to export journal entries as PDF for easy backup,
+- [ ] As a user I should be able to export journal entries as PDF for easy backup,
   printing my entries as well as the ones shared with me
-- As a user I want to be notified by email when a person submits or updates a
+- [ ] As a user I want to be notified by email when a person submits or updates a
   journal entry or replies to a journal
-- As a user I should be able to confirm my account via email (currently there is a
+- [ ] As a user I should be able to confirm my account via email (currently there is a
   button to fake this) when registering
 
 Raspberry Pi Setup:
