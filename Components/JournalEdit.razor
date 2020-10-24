@@ -105,19 +105,22 @@ else
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         await api.EditJournalEntryAsync(JournalIdGuid, Journal);
 
-        foreach (var user in UserManager.Users.ToList())
+        if (Journal.Status.Value != "Draft")
         {
-            if (user.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+            foreach (var user in UserManager.Users.ToList())
             {
-                // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
-                var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{Journal.Id}";
-
-                await MailService.SendEmailAsync(new Mail.MailRequest
+                if (user.UserName != HttpAccessor.HttpContext.User.Identity.Name)
                 {
-                    To = user.Email,
-                    Subject = $"{user.UserName} edited a journal entry",
-                    Body = $"Hello,<br><br>{Journal.UserName} edited the journal entry titled '{Journal.Title}'.<br><br>You can view it here: {journalLink}"
-                });
+                    // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
+                    var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{Journal.Id}";
+
+                    await MailService.SendEmailAsync(new Mail.MailRequest
+                    {
+                        To = user.Email,
+                        Subject = $"{user.UserName} edited a journal entry",
+                        Body = $"Hello,<br><br>{Journal.UserName} edited the journal entry titled '{Journal.Title}'.<br><br>You can view it here: {journalLink}"
+                    });
+                }
             }
         }
 

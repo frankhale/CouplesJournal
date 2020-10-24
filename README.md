@@ -41,12 +41,13 @@ Above and Beyond:
 
 Raspberry Pi Setup:
 
-- [ ] Set up SD card with Ubuntu 20.10 server
-- [ ] Configure OS, get latest updates, etc...
-- [ ] Enable SSH
-- [ ] Install .NET 5
-- [ ] Punch hole in firewall to allow port 80/443 traffic
-- [ ] Set up nginx (need to figure out how to use self signed cert for 443 traffic)
+- [x] Set up SD card with Ubuntu 20.10 server
+- [x] Configure OS, get latest updates, etc...
+- [x] Enable SSH
+- [x] Install .NET 5
+- [x] Install Nginx
+- [x] Open firewall to allow Nginx
+- [ ] Configure Nginx to proxy to app
 - [ ] Figure out how to run web app forever (if it crashes, restart it)
 
 ## Status
@@ -60,4 +61,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-23 October 2020
+24 October 2020

@@ -77,6 +77,7 @@ namespace CouplesJournal.Data.API
         public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize)
         {
             var query = _db.JournalEntries.Include(x => x.Status)
+                                          .Where(x => x.Status.Value != "Draft")
                                           .OrderByDescending(x => x.UpdatedOn)
                                           .Skip((pageNumber - 1) * pageSize)
                                           .Take(pageSize);
@@ -91,7 +92,7 @@ namespace CouplesJournal.Data.API
 
         public int GetTotalJournals()
         {
-            return _db.JournalEntries.Count();
+            return _db.JournalEntries.Include(x => x.Status).Count(x => x.Status.Value != "Draft");
         }
 
         public async Task AddJournalEntryAsync(JournalEntry entry)

@@ -13,9 +13,9 @@
         <div class="col mw-100">
             @foreach (var journal in Journals)
             {
-                <div @key=journal class="card" style=@(GetStyle(journal))>
+                <div @key=@journal.Id class="card" style=@(GetStyle(journal))>
                     <div class="card-body">
-                        <h5 class="card-title">@journal.Title @JournalStatus</h5>
+                        <h5 class="card-title">@journal.Title @(journal.Status.Value == "Draft" ? "Draft" : "")</h5>
                         <h6 class="card-subtitle mb-2 text-muted">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
                         <p class="card-text" style="margin-top: 15px">
                             @(((MarkupString) Markdown.ToHtml($"{new String(journal.Body.Take(250).ToArray())}...")).Sanitize())
@@ -36,20 +36,17 @@
     [Parameter]
     public List<JournalEntry> Journals { get; set; }
 
-    private string JournalStatus { get; set; } = "";
-
     private string GetStyle(JournalEntry journal)
     {
         var defaultStyle = "margin-bottom: 15px";
         var draftStatusBGColor = "background-color:#F5F6CE";
 
-        if (journal.Status.Value.ToLower() != "draft")
+        if (journal.Status.Value != "Draft")
         {
             return $"{defaultStyle}";
         }
         else
-        {
-            JournalStatus = $"({journal.Status.Value})";
+        {            
             return $"{defaultStyle};{draftStatusBGColor}";
         }
     }
