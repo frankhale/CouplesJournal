@@ -1,7 +1,7 @@
 using Blazored.LocalStorage;
 using CouplesJournal.Areas.Identity;
 using CouplesJournal.Data;
-using CouplesJournal.Data.API;
+using CouplesJournal.Mail;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -46,6 +46,18 @@ namespace CouplesJournal
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            services.Configure<MailSettings>(config =>
+            {
+                config.UserName = Environment.GetEnvironmentVariable("COUPLES_JOURNAL_SMTP_USERNAME");
+                config.Password = Environment.GetEnvironmentVariable("COUPLES_JOURNAL_SMTP_PASSWORD");
+                config.Host = Environment.GetEnvironmentVariable("COUPLES_JOURNAL_SMTP_SERVER");
+                config.Port = Int32.Parse(Environment.GetEnvironmentVariable("COUPLES_JOURNAL_SMTP_PORT"));
+                config.SubjectPrefix = "[Couples Journal] ";
+                config.UseTls = true;
+                config.FromAddress = Environment.GetEnvironmentVariable("COUPLES_JOURNAL_SMTP_USERNAME");
+            });
+            services.AddSingleton<IMailService, MailService>();
 
             services.AddBlazoredLocalStorage();
             services.AddRazorPages();

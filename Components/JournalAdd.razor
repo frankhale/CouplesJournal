@@ -2,12 +2,16 @@
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
+@using CouplesJournal.Mail
+@using Microsoft.AspNetCore.Identity
 @using System.Timers
 
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject IMailService MailService
+@inject UserManager<IdentityUser> UserManager
 
 <EditForm Model=@Journal OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
@@ -32,11 +36,12 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                         @foreach (var status in Statuses)
-                        {
-                            <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(status); }">
-                                @status.Value
-                            </button>
-                        }
+                            {
+                        <button class="dropdown-item" type="button"
+                        @onclick="eventArgs => { OnMenuItemSelected(status); }">
+                            @status.Value
+                        </button>
+                                    }
                     </div>
                 </div>
 
@@ -57,7 +62,7 @@
         if (firstRender && Journal != null &&
             string.IsNullOrEmpty(Journal.Title) && string.IsNullOrEmpty(Journal.Body))
         {
-            var journal = await localStorage.GetItemAsync<JournalEntry>("journal");
+            var journal = await LocalStorage.GetItemAsync<JournalEntry>("journal");
             if (journal != null)
             {
                 Journal.Title = journal.Title;
@@ -87,7 +92,7 @@
     {
         if (!string.IsNullOrEmpty(Journal.Title) || !string.IsNullOrEmpty(Journal.Body))
         {
-            await localStorage.SetItemAsync("journal", Journal);
+            await LocalStorage.SetItemAsync("journal", Journal);
         }
     }
 
@@ -97,8 +102,23 @@
 
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         await api.AddJournalEntryAsync(Journal);
+        await LocalStorage.RemoveItemAsync("journal");
 
-        await localStorage.RemoveItemAsync("journal");
+        if (Journal.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+        {
+            foreach (var user in UserManager.Users.ToList())
+            {
+                // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
+                var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{Journal.Id}";
+
+                await MailService.SendEmailAsync(new Mail.MailRequest
+                {
+                    To = user.Email,
+                    Subject = $"{user.UserName} wrote a new journal entry",
+                    Body = $"Hello,<br><br>{Journal.UserName} wrote a new journal entry titled '{Journal.Title}'.<br><br>You can view it here: {journalLink}"
+                });
+            }
+        }
 
         NavigationManager.NavigateTo($"/ViewJournal/{Journal.Id}");
     }

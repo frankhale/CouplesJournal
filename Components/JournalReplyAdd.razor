@@ -2,10 +2,14 @@
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
 @using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using CouplesJournal.Mail
 
 @inject NavigationManager NavigationManager
 @inject CouplesJournalDbContext DbContext
 @inject IHttpContextAccessor HttpAccessor
+@inject IMailService MailService
+@inject UserManager<IdentityUser> UserManager
 
 <EditForm Model="@Reply" OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
@@ -32,6 +36,23 @@
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         var journalIdGuid = Guid.Parse(JournalId);
         await api.AddJournalEntryReplyAsync(journalIdGuid, Reply);
+
+        var journal = await api.GetJournalEntryAsync(Guid.Parse(JournalId));
+
+        if (journal.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+        {
+            var replyToUser = await UserManager.FindByNameAsync(journal.UserName);
+
+            // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f       
+            var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{JournalId}";
+
+            await MailService.SendEmailAsync(new Mail.MailRequest
+            {
+                To = replyToUser.Email,
+                Subject = $"{replyToUser.UserName} replied to your journal entry",
+                Body = $"Hello,<br><br>{replyToUser.UserName} replied to '{journal.Title}'<br><br>You can view it here: {journalLink}"
+            });
+        }
 
         NavigationManager.NavigateTo($"/ViewJournal/{JournalId.ToString()}", true);
     }
