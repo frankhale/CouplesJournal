@@ -100,10 +100,10 @@ namespace CouplesJournal
                 endpoints.MapFallbackToPage("/_Host");
             });
 
-            //CreateRoles(serviceProvider).Wait();
+            CreateDefaultUsersAndRoles(serviceProvider).Wait();
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
+        private async Task CreateDefaultUsersAndRoles(IServiceProvider serviceProvider)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
