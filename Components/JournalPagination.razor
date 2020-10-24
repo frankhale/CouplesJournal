@@ -68,12 +68,19 @@
     {
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         TotalJournals = api.GetTotalJournals();
-        JournalRemainder = TotalJournals % PageSize;
-        TotalPages = (TotalJournals / PageSize) + JournalRemainder;
+
+        if (!(TotalJournals <= PageSize))
+        {
+            JournalRemainder = TotalJournals % PageSize;
+            TotalPages = (TotalJournals / PageSize) + JournalRemainder;                   
+        }
+        else
+        {
+            JournalRemainder = 0;
+            TotalPages = 1;            
+        }
+
         PageLinkRange = Enumerable.Range(1, TotalPages).ToList().ChunkBy(MaxPageLinks);
-        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
-        
-        await ToggleNextPreviousButtons();
 
         StateHasChanged();
     }
@@ -87,6 +94,7 @@
 
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
+        await ToggleNextPreviousButtons();
     }
 
     private async Task OnPreviousButtonClick()
@@ -114,7 +122,7 @@
         {
             PreviousButtonDisabled = false;
         }
-        
+
         if (CurrentPageOfLinks >= 0 && PageNumber < TotalPages)
         {
             NextButtonDisabled = false;
