@@ -16,52 +16,54 @@
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <EditForm Model=@Journal OnValidSubmit="@Submit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<EditForm Model=@Journal OnValidSubmit="@Submit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="w-100">
-                    <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Journal.Title />
-                </div>
-
-                <div class="w-100" style="padding-top:15px;">
-                    <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;"
-                    @bind=@Journal.Body>
-                    </textarea>
-                </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="w-100">
+                <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Journal.Title />
             </div>
 
-            <div class="row" style="padding-top:15px;">
-                <div class="col">
-                    <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
-                </div>
-                <div class="col" style="text-align:right;display:inline;">
-                    <div style="display:inline;">
-                        <div class="dropdown" style="display:inline;">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @Journal.Status.Value
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
-                                @foreach (var status in Statuses)
+            <div class="w-100" style="padding-top:15px;">
+                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 550px;"
+                @bind=@Journal.Body>
+                </textarea>
+            </div>
+        </div>
+
+        <div class="row" style="padding-top:15px;">
+            <div class="col">
+                <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
+            </div>
+            <div class="col" style="text-align:right;display:inline;">
+                <div style="display:inline;">
+                    <div class="dropdown" style="display:inline;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Journal.Status.Value
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
+                            @foreach (var status in Statuses)
                                 {
-                                    <button @key=status class="dropdown-item" type="button"
-                                    @onclick="eventArgs => { OnMenuItemSelected(status); }">@status.Value</button>
-                                }
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+                            <button @key=status class="dropdown-item" type="button"
+                            @onclick="eventArgs => { OnMenuItemSelected(status); }">
+                                @status.Value
+                            </button>
+                                            }
                         </div>
                     </div>
+                    <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
                 </div>
             </div>
-        </EditForm>
+        </div>
+    </div>
+</EditForm>
 }
 else
 {
-    <span>@ErrorMessage</span>
+<span>@ErrorMessage</span>
 }
 
 @code
@@ -103,9 +105,9 @@ else
         var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         await api.EditJournalEntryAsync(JournalIdGuid, Journal);
 
-        if (Journal.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+        foreach (var user in UserManager.Users.ToList())
         {
-            foreach (var user in UserManager.Users.ToList())
+            if (user.UserName != HttpAccessor.HttpContext.User.Identity.Name)
             {
                 // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
                 var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{Journal.Id}";

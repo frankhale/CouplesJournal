@@ -104,9 +104,9 @@
         await api.AddJournalEntryAsync(Journal);
         await LocalStorage.RemoveItemAsync("journal");
 
-        if (Journal.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+        foreach (var user in UserManager.Users.ToList())
         {
-            foreach (var user in UserManager.Users.ToList())
+            if (user.UserName != HttpAccessor.HttpContext.User.Identity.Name)
             {
                 // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
                 var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{Journal.Id}";

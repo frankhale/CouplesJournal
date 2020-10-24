@@ -38,12 +38,11 @@
         await api.AddJournalEntryReplyAsync(journalIdGuid, Reply);
 
         var journal = await api.GetJournalEntryAsync(Guid.Parse(JournalId));
+        var replyToUser = await UserManager.FindByNameAsync(journal.UserName);
 
-        if (journal.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+        if (replyToUser.UserName != HttpAccessor.HttpContext.User.Identity.Name)
         {
-            var replyToUser = await UserManager.FindByNameAsync(journal.UserName);
-
-            // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f       
+            // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
             var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{JournalId}";
 
             await MailService.SendEmailAsync(new Mail.MailRequest
