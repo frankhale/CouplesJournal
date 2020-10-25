@@ -64,7 +64,7 @@
     private int TotalJournals { get; set; }
     private int JournalRemainder { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
         TotalJournals = api.GetTotalJournals();
