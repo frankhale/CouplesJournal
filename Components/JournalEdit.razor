@@ -123,7 +123,7 @@ else
                     await MailService.SendEmailAsync(new Mail.MailRequest
                     {
                         To = user.Email,
-                        Subject = $"{user.UserName} edited a journal entry",
+                        Subject = $"{_user.Identity.Name} edited a journal entry",
                         Body = $"Hello,<br><br>{Journal.UserName} edited the journal entry titled '{Journal.Title}'.<br><br>You can view it here: {journalLink}"
                     });
                 }

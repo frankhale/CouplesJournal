@@ -57,7 +57,7 @@
             await MailService.SendEmailAsync(new Mail.MailRequest
             {
                 To = replyToUser.Email,
-                Subject = $"{replyToUser.UserName} replied to your journal entry",
+                Subject = $"{_user.Identity.Name} replied to your journal entry",
                 Body = $"Hello,<br><br>{replyToUser.UserName} replied to '{journal.Title}'<br><br>You can view it here: {journalLink}"
             });
         }

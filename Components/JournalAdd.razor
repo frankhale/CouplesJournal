@@ -122,7 +122,7 @@
                     await MailService.SendEmailAsync(new Mail.MailRequest
                     {
                         To = user.Email,
-                        Subject = $"{user.UserName} wrote a new journal entry",
+                        Subject = $"{_user.Identity.Name} wrote a new journal entry",
                         Body = $"Hello,<br><br>{Journal.UserName} wrote a new journal entry titled '{Journal.Title}'.<br><br>You can view it here: {journalLink}"
                     });
                 }
