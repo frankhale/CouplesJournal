@@ -28,9 +28,9 @@ Minimum Viable Product:
 - [x] As a user I should be able to delete a journal entry that I wrote
 - [x] As a user I should be able to delete a reply that I wrote
 - [x] As a user I should be able to page journal results
-- [x] As a user I want to be notified by email when a person submits a journal entry
-- [x] As a user I want to be notified by email when a person updates a journal entry
-- [x] As a user I want to be notified by email when a person replies to one of my journal entries
+- [x] As a user I want to be notified by email when my partner submits a journal entry
+- [x] As a user I want to be notified by email when my partner updates a journal entry
+- [x] As a user I want to be notified by email when my partner replies to one of my journal entries
 
 Above and Beyond:
 
