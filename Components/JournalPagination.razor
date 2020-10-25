@@ -1,13 +1,14 @@
-@using Microsoft.AspNetCore.Http
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
+@using CouplesJournal.Helper
+@using Microsoft.AspNetCore.Components.Authorization
 @using System.Linq
 @using System.Collections.Generic
-@using CouplesJournal.Helper
+@using System.Security.Claims
 
 @inject CouplesJournalDbContext DbContext
-@inject IHttpContextAccessor HttpAccessor
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="container-fluid">
     <div class="row">
@@ -64,9 +65,14 @@
     private int TotalJournals { get; set; }
     private int JournalRemainder { get; set; }
 
-    protected override void OnInitialized()
+    private ClaimsPrincipal _user;
+
+    protected override async Task OnInitializedAsync()
     {
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _user = authState.User;
+        
+        using var api = new CouplesJournalDataApi(DbContext, _user);
         TotalJournals = api.GetTotalJournals();
 
         if (!(TotalJournals <= PageSize))
@@ -92,7 +98,7 @@
             PageNumber = 1;
         }
 
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        using var api = new CouplesJournalDataApi(DbContext, _user);
         Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
         await ToggleNextPreviousButtons();
     }
@@ -132,7 +138,7 @@
             NextButtonDisabled = true;
         }
 
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        using var api = new CouplesJournalDataApi(DbContext, _user);
         Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
         StateHasChanged();
     }

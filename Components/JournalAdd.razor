@@ -1,17 +1,18 @@
-@using Microsoft.AspNetCore.Http
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
 @using CouplesJournal.Mail
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 @using System.Timers
 
 @inject CouplesJournalDbContext DbContext
-@inject IHttpContextAccessor HttpAccessor
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject IMailService MailService
 @inject UserManager<IdentityUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <EditForm Model=@Journal OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
@@ -57,6 +58,8 @@
     private List<JournalStatus> Statuses { get; set; }
     private Timer timer;
 
+    private ClaimsPrincipal _user;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && Journal != null &&
@@ -74,7 +77,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _user = authState.User;
+
+        using var api = new CouplesJournalDataApi(DbContext, _user);
 
         Statuses = (await api.GetJournalStatusesAsync()).ToList();
 
@@ -100,7 +106,7 @@
     {
         timer.Enabled = false;
 
-        using var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        using var api = new CouplesJournalDataApi(DbContext, _user);
         await api.AddJournalEntryAsync(Journal);
         await LocalStorage.RemoveItemAsync("journal");
 
@@ -108,10 +114,10 @@
         {
             foreach (var user in UserManager.Users.ToList())
             {
-                if (user.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+                if (user.UserName != _user.Identity.Name)
                 {
                     // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
-                    var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{Journal.Id}";
+                    var journalLink = $"{NavigationManager.BaseUri}/ViewJournal/{Journal.Id}";
 
                     await MailService.SendEmailAsync(new Mail.MailRequest
                     {

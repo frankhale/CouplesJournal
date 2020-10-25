@@ -1,15 +1,16 @@
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
-@using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Identity
 @using CouplesJournal.Mail
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 @inject NavigationManager NavigationManager
 @inject CouplesJournalDbContext DbContext
-@inject IHttpContextAccessor HttpAccessor
 @inject IMailService MailService
 @inject UserManager<IdentityUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <EditForm Model="@Reply" OnValidSubmit="@Submit">
     <DataAnnotationsValidator />
@@ -31,19 +32,27 @@
 
     private JournalReply Reply = new JournalReply();
 
+    private ClaimsPrincipal _user;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _user = authState.User;
+    }
+
     private async Task Submit()
     {
-        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        var api = new CouplesJournalDataApi(DbContext, _user);
         var journalIdGuid = Guid.Parse(JournalId);
         await api.AddJournalEntryReplyAsync(journalIdGuid, Reply);
 
         var journal = await api.GetJournalEntryAsync(Guid.Parse(JournalId));
         var replyToUser = await UserManager.FindByNameAsync(journal.UserName);
 
-        if (replyToUser.UserName != HttpAccessor.HttpContext.User.Identity.Name)
+        if (replyToUser.UserName != _user.Identity.Name)
         {
             // https://localhost:5001/ViewJournal/2686a141-733c-42e3-b9d9-9e6a48b9c47f
-            var journalLink = $"{HttpAccessor.HttpContext.Request.Scheme}://{HttpAccessor.HttpContext.Request.Host}/ViewJournal/{JournalId}";
+            var journalLink = $"{NavigationManager.BaseUri}/ViewJournal/{JournalId}";
 
             await MailService.SendEmailAsync(new Mail.MailRequest
             {

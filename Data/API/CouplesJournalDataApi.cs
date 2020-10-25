@@ -1,9 +1,9 @@
 ﻿using CouplesJournal.Data.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CouplesJournal.Data.API
@@ -11,13 +11,13 @@ namespace CouplesJournal.Data.API
     public class CouplesJournalDataApi : ICouplesJournalDataApi, IDisposable
     {
         private readonly CouplesJournalDbContext _db;
-        private readonly IHttpContextAccessor _httpContext;
+        private readonly ClaimsPrincipal _user;
         private bool disposedValue;
 
-        public CouplesJournalDataApi(CouplesJournalDbContext db, IHttpContextAccessor httpContext)
+        public CouplesJournalDataApi(CouplesJournalDbContext db, ClaimsPrincipal claimsPrincipal)
         {
             _db = db;
-            _httpContext = httpContext;
+            _user = claimsPrincipal;
         }
 
         #region IDisposable
@@ -68,8 +68,8 @@ namespace CouplesJournal.Data.API
             }
 
             entry.UpdatedOn = DateTime.Now;
-            entry.UserName = _httpContext.HttpContext.User.Identity.Name;
-            entry.UpdatedBy = _httpContext.HttpContext.User.Identity.Name;
+            entry.UserName = _user.Identity.Name;
+            entry.UpdatedBy = _user.Identity.Name;
         }
         #endregion
 
@@ -136,7 +136,7 @@ namespace CouplesJournal.Data.API
         {
             return await _db.JournalEntries
                             .Include(x => x.Status)
-                            .Where(x => x.UserName == _httpContext.HttpContext.User.Identity.Name)
+                            .Where(x => x.UserName == _user.Identity.Name)
                             .OrderByDescending(x => x.UpdatedOn)
                             .ToListAsync();
         }

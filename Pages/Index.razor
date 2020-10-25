@@ -2,13 +2,14 @@
 @page "/page/{PageNumber:int}"
 
 @using Markdig
-@using Microsoft.AspNetCore.Http
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Helper
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 @inject CouplesJournalDbContext DbContext
-@inject IHttpContextAccessor HttpAccessor
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <AuthorizeView Roles="Contributor">
     <Authorized>
@@ -40,9 +41,11 @@
     public string Welcome => Markdown.ToHtml("***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.");
     private bool HasJournals { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var api = new CouplesJournalDataApi(DbContext, HttpAccessor);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();        
+
+        var api = new CouplesJournalDataApi(DbContext, authState.User);
         HasJournals = api.HasJournalsToView();
     }
 

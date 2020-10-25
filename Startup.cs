@@ -62,8 +62,7 @@ namespace CouplesJournal
 
             services.AddBlazoredLocalStorage();
             services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddServerSideBlazor();            
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
         }

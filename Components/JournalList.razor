@@ -3,30 +3,31 @@
 @using CouplesJournal.Data.Entities
 @using CouplesJournal.Helper
 @using Markdig
-@using Microsoft.AspNetCore.Http
 @using System.Linq
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
-@inject IHttpContextAccessor HttpAccessor
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="container-fluid">
     <div class="row">
         <div class="col mw-100">
             @foreach (var journal in Journals)
             {
-                <div @key=@journal.Id class="card" style=@(GetStyle(journal))>
-                    <div class="card-body">
-                        <h5 class="card-title">@journal.Title @(journal.Status.Value == "Draft" ? "Draft" : "")</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
-                        <p class="card-text" style="margin-top: 15px">
-                            @(((MarkupString) Markdown.ToHtml($"{new String(journal.Body.Take(250).ToArray())}...")).Sanitize())
-                        </p>
-                        <a href=@($"/ViewJournal/{journal.Id}") class="card-link">Read More...</a>
-                        @if(journal.UserName == HttpAccessor.HttpContext.User.Identity.Name)
+            <div @key=@journal.Id class="card" style=@(GetStyle(journal))>
+                <div class="card-body">
+                    <h5 class="card-title">@journal.Title @(journal.Status.Value == "Draft" ? "Draft" : "")</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
+                    <p class="card-text" style="margin-top: 15px">
+                        @(((MarkupString) Markdown.ToHtml($"{new String(journal.Body.Take(250).ToArray())}...")).Sanitize())
+                    </p>
+                    <a href=@($"/ViewJournal/{journal.Id}") class="card-link">Read More...</a>
+                    @if (user != null && journal.UserName == user.Identity.Name)
                         {
-                            <a href=@($"/EditJournal/{journal.Id}") class="card-link">Edit</a>
-                        }
-                    </div>
+                    <a href=@($"/EditJournal/{journal.Id}") class="card-link">Edit</a>
+                    }
                 </div>
+            </div>
             }
         </div>
     </div>
@@ -35,6 +36,14 @@
 @code {
     [Parameter]
     public List<JournalEntry> Journals { get; set; }
+
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+    }
 
     private string GetStyle(JournalEntry journal)
     {
@@ -46,7 +55,7 @@
             return $"{defaultStyle}";
         }
         else
-        {            
+        {
             return $"{defaultStyle};{draftStatusBGColor}";
         }
     }
