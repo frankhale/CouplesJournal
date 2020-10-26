@@ -5,7 +5,7 @@ html, body {
 }
 
 a, .btn-link {
-    color: #0366d6;
+    color: #aaa;
 }
 
 .btn-primary {
@@ -50,5 +50,16 @@ a, .btn-link {
     }
 
 .journal-entry-edit {
-    height: 450px !important;
+    height: 450px !important;    
+}
+
+.journal-draft {
+    margin-bottom: 15px;
+    background-color: #555555;
+}
+
+.form-control {
+    background-color: #333 !important;
+    border: 1px solid #555 !important;
+    color: #fff !important;
 }

@@ -113,10 +113,11 @@ else
         }
     }
 
+    // TODO: This needs to be GetClass() and styles need to be in CSS not here!
     private string GetStyle(JournalEntry entry)
     {
         var defaultStyle = "margin-bottom: 15px";
-        var draftStatusBGColor = "background-color:#F5F6CE";
+        var draftStatusBGColor = "background-color:#555555";
 
         if (entry.Status.Value.ToLower() != "draft")
         {
