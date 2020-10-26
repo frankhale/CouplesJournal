@@ -25,24 +25,23 @@
             </div>
 
             <div class="w-100 mh-100" style="padding-top:15px;">
-                <textarea class="form-control" placeholder="Enter Journal Here..." style="height: 450px;"
-                @bind=@Journal.Body></textarea>
+                <textarea class="form-control journal-entry-edit" placeholder="Enter Journal Here..." @bind=@Journal.Body></textarea>
             </div>
 
             <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
                 <div class="dropdown" style="display:inline;">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @Journal.Status.Value
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                         @foreach (var status in Statuses)
-                            {
-                        <button class="dropdown-item" type="button"
-                        @onclick="eventArgs => { OnMenuItemSelected(status); }">
-                            @status.Value
-                        </button>
-                                    }
+                        {
+                            <button class="dropdown-item" type="button"
+                                    @onclick="eventArgs => { OnMenuItemSelected(status); }">
+                                @status.Value
+                            </button>
+                        }
                     </div>
                 </div>
 

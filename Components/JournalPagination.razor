@@ -27,9 +27,9 @@
 
                 @foreach (var x in PageLinkRange[CurrentPageOfLinks])
                 {
-                <li key=x class="page-item @(PageNumber == x ? "active" : "")">
-                    <a class="page-link" href=@($"/page/{x}")>@x</a>
-                </li>
+                    <li key=x class="page-item @(PageNumber == x ? "active" : "")">
+                        <a class="page-link" href=@($"/page/{x}")>@x</a>
+                    </li>
                 }
 
                 <li class="page-item @(NextButtonDisabled ? "disabled" : "")">
@@ -71,19 +71,19 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _user = authState.User;
-        
+
         using var api = new CouplesJournalDataApi(DbContext, _user);
         TotalJournals = api.GetTotalJournals();
 
         if (!(TotalJournals <= PageSize))
         {
             JournalRemainder = TotalJournals % PageSize;
-            TotalPages = (TotalJournals / PageSize) + JournalRemainder;                   
+            TotalPages = (TotalJournals / PageSize) + ((JournalRemainder > 0) ? 1 : 0);
         }
         else
         {
             JournalRemainder = 0;
-            TotalPages = 1;            
+            TotalPages = 1;
         }
 
         PageLinkRange = Enumerable.Range(1, TotalPages).ToList().ChunkBy(MaxPageLinks);

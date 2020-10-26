@@ -6,10 +6,10 @@ for my wife and I to share endearing messages between each other.
 
 The technology stack chosen:
 
-- .NET 5 (RC 1)
+- .NET 5 (RC 2)
 - Blazor (Server)
 - Entity Framework Core (SQLite)
-- Raspberry Pi 3B+ (hopefully, or 4 if push comes to shove)
+- Raspberry Pi 3B+
 
 ## Requirements
 
@@ -32,7 +32,7 @@ Minimum Viable Product:
 - [x] As a user I want to be notified by email when my partner updates a journal entry
 - [x] As a user I want to be notified by email when my partner replies to one of my journal entries
 
-Above and Beyond:
+Other:
 
 - [ ] As a user I should be able to export journal entries as PDF for easy backup,
   printing my entries as well as the ones shared with me
@@ -52,8 +52,11 @@ Raspberry Pi Setup:
 
 ## Status
 
-All features I marked in MVP are done. Next up is code cleanup and to test the
+All features I marked in MVP are done. Next up is bug fixing, code cleanup and to test the
 hell out of this before I put it in production!!!
+
+.NET 5 runs well on the Pi 3B+ but it's a little slower than I'd want. I may end up moving 
+this app to a Pi 4. That being said I'm okay with the performance of the Pi 3B+ right now.
 
 ## Author(s)
 
