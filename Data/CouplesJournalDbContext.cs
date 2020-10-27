@@ -9,6 +9,7 @@ namespace CouplesJournal.Data
         public DbSet<JournalEntry> JournalEntries { get; set; }
         public DbSet<JournalReply> JournalReplies { get; set; }
         public DbSet<JournalStatus> JournalStatuses { get; set; }
+        public DbSet<EmailNotification> EmailNotifications { get; set; }
 
         public CouplesJournalDbContext(DbContextOptions options) : base(options) { }
 
