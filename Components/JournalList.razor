@@ -14,10 +14,10 @@
         <div class="col mw-100">
             @foreach (var journal in Journals)
             {
-                <div @key=@journal.Id class="card" style=@(GetStyle(journal))>
-                    <div class="card-body">
+                <div @key=@journal.Id class=@($"card content-margin {GetStyle(journal)}")>
+                    <div class="card-body rounded content-border">
                         <h5 class="card-title">@journal.Title @(journal.Status.Value == "Draft" ? "[Draft]" : "")</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
+                        <h6 class="card-subtitle mb-2 text-muted content-border-top">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
                         <p class="card-text" style="margin-top: 15px">
                             @(((MarkupString) Markdown.ToHtml($"{new String(journal.Body.Take(250).ToArray())}...")).Sanitize())
                         </p>
@@ -45,19 +45,13 @@
         _user = authState.User;
     }
 
-    // TODO: This needs to be GetClass() and styles need to be in CSS not here!
     private string GetStyle(JournalEntry journal)
     {
-        var defaultStyle = "margin-bottom: 15px";
-        var draftStatusBGColor = "background-color:#555555";
+        if (journal.Status.Value == "Draft")
+        {
+            return "content-draft";
+        }
 
-        if (journal.Status.Value != "Draft")
-        {
-            return $"{defaultStyle}";
-        }
-        else
-        {
-            return $"{defaultStyle};{draftStatusBGColor}";
-        }
+        return string.Empty;
     }
 }

@@ -13,65 +13,65 @@
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
-<div class="container-fluid">
-    <div class="row">
-        <div class="col mw-100">
-            <div class="card" style=@(GetStyle(Journal))>
-                <div class="card-body">
-                    <h5 class="card-title">@Journal.Title @EntryStatus</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        by @Journal.UserName.Split("@")[0] on
-                        @Journal.UpdatedOn.ToLongDateString() &#64; @Journal.UpdatedOn.ToLongTimeString()
-                    </h6>
-                    <p class="card-text" style="margin-top: 15px">
-                        @(((MarkupString) Markdown.ToHtml(@Journal.Body)).Sanitize())
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col mw-100">
-            <JournalReplyAdd JournalId=@Journal.Id.ToString() />
-        </div>
-    </div>
-    @if (Journal.Replies.Any())
-        {
-    <hr />
-    <div class="row">
-        <div class="col mw-100">
-            @foreach (var reply in Journal.Replies.OrderByDescending(x => x.UpdatedOn))
-                    {
-            <div class="card" style="margin-top:15px;">
-                <div class="card-body">
-                    <div class="card-subtitle mb-2 text-muted">
-                        <span>
-                            by @reply.UserName.Split("@")[0] on @reply.UpdatedOn.ToLongDateString()
-                            &#64;@reply.UpdatedOn.ToLongTimeString()
-                        </span>
-
-                        @if (reply.UserName == _user.Identity.Name)
-                                    {
-                        <span>
-                            &nbsp;<a href=@($"/EditJournalReply/{@Journal.Id}/reply/{reply.Id}")
-                            class="card-link">Edit</a>
-                        </span>
-                        }
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mw-100">
+                <div class=@($"card rounded content-border {GetStyle(Journal)}")>
+                    <div class="card-body">
+                        <h5 class="card-title">@Journal.Title @EntryStatus</h5>
+                        <h6 class="card-subtitle mb-2 text-muted content-border-top">
+                            by @Journal.UserName.Split("@")[0] on
+                            @Journal.UpdatedOn.ToLongDateString() &#64; @Journal.UpdatedOn.ToLongTimeString()
+                        </h6>
+                        <p class="card-text" style="margin-top: 15px">
+                            @(((MarkupString) Markdown.ToHtml(@Journal.Body)).Sanitize())
+                        </p>
                     </div>
-                    <p class="card-text" style="margin-top: 15px">
-                        @(((MarkupString) Markdown.ToHtml(@reply.Body)).Sanitize())
-                    </p>
                 </div>
             </div>
-            }
         </div>
+        <div class="row">
+            <div class="col mw-100">
+                <JournalReplyAdd JournalId=@Journal.Id.ToString() />
+            </div>
+        </div>
+        @if (Journal.Replies.Any())
+        {
+            <hr />
+            <div class="row">
+                <div class="col mw-100">
+                    @foreach (var reply in Journal.Replies.OrderByDescending(x => x.UpdatedOn))
+                    {
+                        <div class="card rounded content-border" style="margin-top:15px;">
+                            <div class="card-body ">
+                                <div class="card-subtitle mb-2 text-muted content-border-top">
+                                    <span>
+                                        by @reply.UserName.Split("@")[0] on @reply.UpdatedOn.ToLongDateString()
+                                        &#64;@reply.UpdatedOn.ToLongTimeString()
+                                    </span>
+
+                                    @if (reply.UserName == _user.Identity.Name)
+                                    {
+                                        <span>
+                                            &nbsp;<a href=@($"/EditJournalReply/{@Journal.Id}/reply/{reply.Id}")
+                                                     class="card-link">Edit</a>
+                                        </span>
+                                    }
+                                </div>
+                                <p class="card-text" style="margin-top: 15px">
+                                    @(((MarkupString) Markdown.ToHtml(@reply.Body)).Sanitize())
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
-    }
-</div>
 }
 else
 {
-<span>@ErrorMessage</span>
+    <span>@ErrorMessage</span>
 }
 
 @code
@@ -113,20 +113,13 @@ else
         }
     }
 
-    // TODO: This needs to be GetClass() and styles need to be in CSS not here!
-    private string GetStyle(JournalEntry entry)
+    private string GetStyle(JournalEntry journal)
     {
-        var defaultStyle = "margin-bottom: 15px";
-        var draftStatusBGColor = "background-color:#555555";
+        if (journal.Status.Value == "Draft")
+        {
+            return "content-draft";
+        }
 
-        if (entry.Status.Value.ToLower() != "draft")
-        {
-            return $"{defaultStyle}";
-        }
-        else
-        {
-            EntryStatus = $"({entry.Status.Value})";
-            return $"{defaultStyle};{draftStatusBGColor}";
-        }
+        return string.Empty;
     }
 }

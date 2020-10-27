@@ -63,3 +63,19 @@ a, .btn-link {
     border: 1px solid #555 !important;
     color: #fff !important;
 }
+
+.content-border {
+    border: 2px solid #444444;
+}
+
+.content-border-top {
+    border-top: 2px solid #444444;
+}
+
+.content-margin {
+    margin-bottom: 15px;
+}
+
+.content-draft {    
+    background-color: #565;
+}

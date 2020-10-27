@@ -9,6 +9,7 @@
 }
 
 .sidebar {
+    border-right: 1px solid #444444;
     background-color: #222222;
 }
 
