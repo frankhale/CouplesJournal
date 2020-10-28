@@ -40,6 +40,7 @@ namespace CouplesJournal.Blazor.Data.API
         #region Email Notification
         Task AddEmailNotificationAsync(EmailNotification emailNotification);
         Task<IEnumerable<EmailNotification>> GetEmailNotificationsToProcess();
+        Task SetEmailNotificationProcessed(EmailNotification emailNotification);
         #endregion
     }
 }

@@ -28,14 +28,18 @@ namespace CouplesJournal.EmailProcessor
             });
 
             var api = new CouplesJournalDataApi(new CouplesJournalDbContext(Environment.GetEnvironmentVariable("COUPLES_JOURNAL_CONNECTION_STRING")));
-            var emailsToProcess = (await api.GetEmailNotificationsToProcess())
-                                            .Select(x => mailService.SendEmailAsync(new MailRequest
-                                            {
-                                                To = x.To,
-                                                Subject = x.Subject,
-                                                Body = x.Body
-                                            }));
-            await Task.WhenAll(emailsToProcess);
+            var emailNotifications = await api.GetEmailNotificationsToProcess();
+            var emailNotificationsToProcess = emailNotifications.Select(x =>
+                mailService.SendEmailAsync(new MailRequest
+                {
+                    To = x.To,
+                    Subject = x.Subject,
+                    Body = x.Body
+                }));
+            var emailNotificationsToSetAsProcessed = emailNotifications.Select(x => api.SetEmailNotificationProcessed(x));
+
+            await Task.WhenAll(emailNotificationsToProcess);
+            await Task.WhenAll(emailNotificationsToSetAsProcessed);
         }
     }
 }

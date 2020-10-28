@@ -244,6 +244,12 @@ namespace CouplesJournal.Blazor.Data.API
         {
             return await _db.EmailNotifications.Where(x => !x.Processed).ToListAsync();
         }
+
+        public async Task SetEmailNotificationProcessed(EmailNotification emailNotification)
+        {
+            emailNotification.Processed = true;
+            await _db.SaveChangesAsync();
+        }
         #endregion
     }
 }
