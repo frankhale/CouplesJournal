@@ -22,7 +22,11 @@ namespace CouplesJournal.Blazor.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString);
+            if (!string.IsNullOrEmpty(_connectionString))
+            {
+                optionsBuilder.UseSqlite(_connectionString);
+            }
+            
             base.OnConfiguring(optionsBuilder);
         }
 
