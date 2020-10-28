@@ -1,10 +1,9 @@
 ﻿using CouplesJournal.Blazor.Data;
 using CouplesJournal.Blazor.Data.API;
 using CouplesJournal.EmailProcessor.Mail;
-using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace CouplesJournal.EmailProcessor
 {
@@ -29,9 +28,14 @@ namespace CouplesJournal.EmailProcessor
             });
 
             var api = new CouplesJournalDataApi(new CouplesJournalDbContext(Environment.GetEnvironmentVariable("COUPLES_JOURNAL_CONNECTION_STRING")));
-            var emailsToProcess = await api.GetEmailNotificationsToProcess();
-
-            // send the emails here...
+            var emailsToProcess = (await api.GetEmailNotificationsToProcess())
+                                            .Select(x => mailService.SendEmailAsync(new MailRequest
+                                            {
+                                                To = x.To,
+                                                Subject = x.Subject,
+                                                Body = x.Body
+                                            }));
+            await Task.WhenAll(emailsToProcess);
         }
     }
 }
