@@ -1,0 +1,145 @@
+@using CouplesJournal.Blazor.Data
+@using CouplesJournal.Blazor.Data.API
+@using CouplesJournal.Blazor.Data.Entities
+@using CouplesJournal.Blazor.Helper
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Linq
+@using System.Collections.Generic
+@using System.Security.Claims
+
+@inject CouplesJournalDbContext DbContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            @Content(Journals)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <ul class="pagination" style="justify-content: center;">
+                <li class="page-item @(PreviousButtonDisabled ? "disabled" : "")">
+                    <button class="page-link" aria-label="Previous" @onclick=@OnPreviousButtonClick>
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+
+                @foreach (var x in PageLinkRange[CurrentPageOfLinks])
+                {
+                    <li key=x class="page-item @(PageNumber == x ? "active" : "")">
+                        <a class="page-link" href=@($"/page/{x}")>@x</a>
+                    </li>
+                }
+
+                <li class="page-item @(NextButtonDisabled ? "disabled" : "")">
+                    <button class="page-link" aria-label="Next" @onclick=@OnNextButtonClick>
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public RenderFragment<List<JournalEntry>> Content { get; set; }
+
+    [Parameter]
+    public int PageNumber { get; set; }
+
+    [Parameter]
+    public int PageSize { get; set; }
+
+    [Parameter]
+    public int MaxPageLinks { get; set; }
+
+    private List<JournalEntry> Journals { get; set; }
+    private int TotalPages { get; set; }
+    private int CurrentPageOfLinks { get; set; }
+    private List<List<int>> PageLinkRange { get; set; }
+    private bool PreviousButtonDisabled { get; set; } = true;
+    private bool NextButtonDisabled { get; set; } = true;
+    private int TotalJournals { get; set; }
+    private int JournalRemainder { get; set; }
+
+    private ClaimsPrincipal _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _user = authState.User;
+
+        using var api = new CouplesJournalDataApi(DbContext, _user);
+        TotalJournals = api.GetTotalJournals();
+
+        if (!(TotalJournals <= PageSize))
+        {
+            JournalRemainder = TotalJournals % PageSize;
+            TotalPages = (TotalJournals / PageSize) + ((JournalRemainder > 0) ? 1 : 0);
+        }
+        else
+        {
+            JournalRemainder = 0;
+            TotalPages = 1;
+        }
+
+        PageLinkRange = Enumerable.Range(1, TotalPages).ToList().ChunkBy(MaxPageLinks);
+
+        StateHasChanged();
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (PageNumber == 0)
+        {
+            PageNumber = 1;
+        }
+
+        using var api = new CouplesJournalDataApi(DbContext, _user);
+        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
+        await ToggleNextPreviousButtons();
+    }
+
+    private async Task OnPreviousButtonClick()
+    {
+        PageNumber -= 1;
+        await ToggleNextPreviousButtons();
+    }
+
+    private async Task OnNextButtonClick()
+    {
+        PageNumber += 1;
+        await ToggleNextPreviousButtons();
+    }
+
+    private async Task ToggleNextPreviousButtons()
+    {
+        CurrentPageOfLinks = ((int)Math.Ceiling((decimal)PageNumber / PageSize)) - 1;
+
+        if (PageNumber == 1 || CurrentPageOfLinks < 0)
+        {
+            CurrentPageOfLinks = 0;
+            PreviousButtonDisabled = true;
+        }
+        else
+        {
+            PreviousButtonDisabled = false;
+        }
+
+        if (CurrentPageOfLinks >= 0 && PageNumber < TotalPages)
+        {
+            NextButtonDisabled = false;
+        }
+        else
+        {
+            NextButtonDisabled = true;
+        }
+
+        using var api = new CouplesJournalDataApi(DbContext, _user);
+        Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize)).ToList();
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,59 @@
+﻿@page "/"
+@page "/page/{PageNumber:int}"
+
+@using Markdig
+@using CouplesJournal.Blazor.Data
+@using CouplesJournal.Blazor.Data.API
+@using CouplesJournal.Blazor.Helper
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
+@inject CouplesJournalDbContext DbContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView Roles="Contributor">
+    <Authorized>
+        @if (HasJournals)
+        {
+            <JournalPagination PageNumber=@PageNumber.Value PageSize=3 MaxPageLinks=3>
+                <Content Context="journals">
+                    <JournalList Journals=@journals />
+                </Content>
+            </JournalPagination>
+        }
+        else
+        {
+            <span>There are no Journal entries at this time...</span>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <div>
+            @(((MarkupString)Welcome).Sanitize())
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    [Parameter]
+    public int? PageNumber { get; set; }
+
+    public string Welcome => Markdown.ToHtml("***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.");
+    private bool HasJournals { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();        
+
+        var api = new CouplesJournalDataApi(DbContext, authState.User);
+        HasJournals = api.HasJournalsToView();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (PageNumber == null || !PageNumber.HasValue)
+        {
+            PageNumber = 0;
+        }
+    }
+}
