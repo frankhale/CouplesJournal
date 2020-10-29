@@ -40,6 +40,15 @@ namespace CouplesJournal.EmailProcessor
 
             await Task.WhenAll(emailNotificationsToProcess);
             await Task.WhenAll(emailNotificationsToSetAsProcessed);
+
+            if (emailNotifications.Count() > 0)
+            {
+                Console.WriteLine($"Processed {emailNotifications.Count()} email notifications...");
+            }
+            else
+            {
+                Console.WriteLine("There are no email notifications to process at this time...");
+            }
         }
     }
 }

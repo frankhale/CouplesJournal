@@ -43,11 +43,11 @@ namespace CouplesJournal.Blazor
                 options.User.RequireUniqueEmail = true;
             })
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();           
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddBlazoredLocalStorage();
             services.AddRazorPages();
-            services.AddServerSideBlazor();            
+            services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
         }

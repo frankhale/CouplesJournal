@@ -9,6 +9,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="users.db-shm" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="5.0.355" />
     <PackageReference Include="Markdig" Version="0.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0-rc.2.20475.17" />
