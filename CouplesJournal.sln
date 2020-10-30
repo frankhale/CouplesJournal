@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CouplesJournal.Blazor", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CouplesJournal.Data", "CouplesJournal.Data\CouplesJournal.Data.csproj", "{9FED239C-D335-4300-B684-868FDE54C006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouplesJournalEmailProcessor", "CouplesJournalEmailProcessor\CouplesJournalEmailProcessor.csproj", "{C0F2B128-4D52-447D-BDAD-3FFDAF32A0F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CouplesJournalEmailProcessor", "CouplesJournalEmailProcessor\CouplesJournalEmailProcessor.csproj", "{C0F2B128-4D52-447D-BDAD-3FFDAF32A0F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CouplesJournal", "CouplesJournal", "{DFE0AA49-C6B6-4353-AF0F-9C997BF8D072}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

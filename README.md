@@ -9,7 +9,7 @@ The technology stack chosen:
 - .NET 5 (RC 2)
 - Blazor (Server)
 - Entity Framework Core (SQLite)
-- Raspberry Pi 3B+
+- Raspberry Pi 3B+ (Ubuntu 20.10 Server)
 
 ## Requirements
 
@@ -34,6 +34,9 @@ Minimum Viable Product:
 
 Other:
 
+- [ ] As a user I'd like to have a page that provides my analytics 
+    - number of journals posted
+    - number of replies
 - [ ] As a user I should be able to export journal entries as PDF for easy backup,
   printing my entries as well as the ones shared with me
 - [ ] As a user I should be able to confirm my account via email (currently there is a
@@ -52,8 +55,8 @@ Raspberry Pi Setup:
 
 ## Status
 
-All features I marked in MVP are done. Next up is bug fixing, code cleanup and to test the
-hell out of this before I put it in production!!!
+All features I marked in MVP are done. I'm working on some nice to haves and then finish
+the remaining server admin work.
 
 .NET 5 runs well on the Pi 3B+ but it's a little slower than I'd want. I may end up moving 
 this app to a Pi 4. That being said I'm okay with the performance of the Pi 3B+ right now.
@@ -64,4 +67,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-24 October 2020
+29 October 2020
