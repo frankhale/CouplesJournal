@@ -111,23 +111,22 @@ namespace CouplesJournal.Blazor
             {
                 await roleManager.CreateAsync(new IdentityRole("Contributor"));
             }
-
-            var defaultPassword = Configuration.GetSection("DefaultPassword").Value;
-            var users = Configuration.GetSection("DefaultUsers").Get<List<string>>();
+           
+            var users = Configuration.GetSection("DefaultUsers").Get<List<DefaultUserAccount>>();
 
             foreach (var user in users)
             {
-                if (userManager.Users.FirstOrDefault(x => x.UserName == user) == null)
+                if (userManager.Users.FirstOrDefault(x => x.UserName == user.UserName) == null)
                 {
                     userManager.CreateAsync(new ApplicationUser
                     {
-                        //DisplayName = "FIXME",
-                        UserName = user,
-                        Email = user,
+                        DisplayName = user.DisplayName,
+                        UserName = user.UserName,
+                        Email = user.Email,
                         EmailConfirmed = true
-                    }, defaultPassword).Wait();
+                    }, user.Password).Wait();
 
-                    var newUser = await userManager.FindByEmailAsync(user);
+                    var newUser = await userManager.FindByNameAsync(user.UserName);
                     userManager.AddToRoleAsync(newUser, "Contributor").Wait();
                 }
             }
