@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using CouplesJournal.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CouplesJournal.Blazor.Data
+namespace CouplesJournal.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

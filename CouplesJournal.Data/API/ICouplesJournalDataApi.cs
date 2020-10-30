@@ -1,10 +1,9 @@
-﻿using CouplesJournal.Blazor.Data.Entities;
+﻿using CouplesJournal.Data.Entities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CouplesJournal.Blazor.Data.API
+namespace CouplesJournal.Data.API
 {
     interface ICouplesJournalDataApi
     {

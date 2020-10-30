@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CouplesJournal.Blazor.Data.Entities
+namespace CouplesJournal.Data.Entities
 {
     public class JournalReply : Entity
     {

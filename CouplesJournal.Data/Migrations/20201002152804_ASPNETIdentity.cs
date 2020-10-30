@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace CouplesJournal.Blazor.Migrations
+namespace CouplesJournal.Migrations
 {
     public partial class ASPNETIdentity : Migration
     {

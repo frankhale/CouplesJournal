@@ -6,16 +6,17 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using CouplesJournal.Data.Entities;
 
 namespace CouplesJournal.Blazor.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginWithRecoveryCodeModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginWithRecoveryCodeModel> _logger;
 
-        public LoginWithRecoveryCodeModel(SignInManager<IdentityUser> signInManager, ILogger<LoginWithRecoveryCodeModel> logger)
+        public LoginWithRecoveryCodeModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginWithRecoveryCodeModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

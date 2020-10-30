@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CouplesJournal.Blazor.Data.Entities
+namespace CouplesJournal.Data.Entities
 {
     public abstract class Entity
     {

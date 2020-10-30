@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CouplesJournal.Blazor.Migrations.CouplesJournalDb
+namespace CouplesJournal.Migrations.CouplesJournalDb
 {
     public partial class InitialDbModel : Migration
     {

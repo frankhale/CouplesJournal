@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using CouplesJournal.Blazor.Areas.Identity;
-using CouplesJournal.Blazor.Data;
+using CouplesJournal.Data;
+using CouplesJournal.Data.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -37,7 +38,7 @@ namespace CouplesJournal.Blazor
                 options.UseSqlite(
                     Configuration.GetConnectionString("JournalsDbConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.User.RequireUniqueEmail = true;
@@ -48,7 +49,7 @@ namespace CouplesJournal.Blazor
             services.AddBlazoredLocalStorage();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
@@ -95,7 +96,7 @@ namespace CouplesJournal.Blazor
 
         private async Task CreateDefaultUsersAndRoles(IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             var hasAdminRole = await roleManager.RoleExistsAsync("Administrator");
@@ -118,8 +119,9 @@ namespace CouplesJournal.Blazor
             {
                 if (userManager.Users.FirstOrDefault(x => x.UserName == user) == null)
                 {
-                    userManager.CreateAsync(new IdentityUser
+                    userManager.CreateAsync(new ApplicationUser
                     {
+                        //DisplayName = "FIXME",
                         UserName = user,
                         Email = user,
                         EmailConfirmed = true

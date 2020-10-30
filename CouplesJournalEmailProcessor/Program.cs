@@ -1,5 +1,5 @@
-﻿using CouplesJournal.Blazor.Data;
-using CouplesJournal.Blazor.Data.API;
+﻿using CouplesJournal.Data;
+using CouplesJournal.Data.API;
 using CouplesJournal.EmailProcessor.Mail;
 using System;
 using System.Linq;

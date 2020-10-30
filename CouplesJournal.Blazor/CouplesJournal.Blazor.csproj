@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="users.db-shm" />
+    <None Remove="users.db-wal" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="5.0.355" />

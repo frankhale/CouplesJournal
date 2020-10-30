@@ -1,8 +1,7 @@
-﻿using CouplesJournal.Blazor.Data.Entities;
+﻿using CouplesJournal.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 
-namespace CouplesJournal.Blazor.Data
+namespace CouplesJournal.Data
 {
     public class CouplesJournalDbContext : DbContext
     {

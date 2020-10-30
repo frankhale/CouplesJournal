@@ -1,8 +1,8 @@
 @namespace CouplesJournal.Blazor.Components
 
-@using CouplesJournal.Blazor.Data
-@using CouplesJournal.Blazor.Data.API
-@using CouplesJournal.Blazor.Data.Entities
+@using CouplesJournal.Data
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Entities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
@@ -10,7 +10,7 @@
 @inject CouplesJournalDbContext DbContext
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
-@inject UserManager<IdentityUser> UserManager
+@inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
