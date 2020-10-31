@@ -18,7 +18,7 @@
                     <div class="card-body rounded content-border">
                         <h5 class="card-title">@journal.Title @(journal.Status.Value == "Draft" ? "[Draft]" : "")</h5>
                         <h6 class="card-subtitle mb-2 text-muted content-border-top">by @journal.UserName.Split("@")[0] on @journal.UpdatedOn.ToLongDateString() &#64; @journal.UpdatedOn.ToLongTimeString()</h6>
-                        <p class="card-text" style="margin-top: 15px">
+                        <p class="card-text default-margin">
                             @(((MarkupString) Markdown.ToHtml($"{new String(journal.Body.Take(250).ToArray())}...")).Sanitize())
                         </p>
                         <a href=@($"/ViewJournal/{journal.Id}") class="card-link">Read More...</a>

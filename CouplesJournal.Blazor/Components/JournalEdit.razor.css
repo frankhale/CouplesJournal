@@ -1,0 +1,16 @@
+﻿.default-padding {
+    padding-top: 15px;
+}
+
+.journal-edit {
+    height: 450px;
+}
+
+.journal-edit-buttons {
+    text-align:right;
+    display:inline;
+}
+
+.inline {
+    display: inline;
+}

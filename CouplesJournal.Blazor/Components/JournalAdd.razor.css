@@ -1,0 +1,17 @@
+.journal-add-buttons {
+    padding-top: 15px;
+    text-align: right;
+    display: inline;
+}
+
+.journal-add {
+    height: 450px;
+}
+
+.default-padding {
+    padding-top: 15px;
+}
+
+.inline {
+    display: inline;
+}

@@ -23,7 +23,7 @@
                             by @Journal.UserName.Split("@")[0] on
                             @Journal.UpdatedOn.ToLongDateString() &#64; @Journal.UpdatedOn.ToLongTimeString()
                         </h6>
-                        <p class="card-text" style="margin-top: 15px">
+                        <p class="card-text default-margin">
                             @(((MarkupString) Markdown.ToHtml(@Journal.Body)).Sanitize())
                         </p>
                     </div>
@@ -42,9 +42,9 @@
                 <div class="col mw-100">
                     @foreach (var reply in Journal.Replies.OrderByDescending(x => x.UpdatedOn))
                     {
-                        <div class="card rounded content-border" style="margin-top:15px;">
+                        <div key=@reply class="card rounded content-border default-margin">
                             <div class="card-body ">
-                                <div class="card-subtitle mb-2 text-muted content-border-top">
+                                <div class="card-subtitle mb-2 text-muted">
                                     <span>
                                         by @reply.UserName.Split("@")[0] on @reply.UpdatedOn.ToLongDateString()
                                         &#64;@reply.UpdatedOn.ToLongTimeString()
@@ -58,7 +58,7 @@
                                         </span>
                                     }
                                 </div>
-                                <p class="card-text" style="margin-top: 15px">
+                                <p class="card-text default-margin">
                                     @(((MarkupString) Markdown.ToHtml(@reply.Body)).Sanitize())
                                 </p>
                             </div>

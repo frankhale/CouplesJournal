@@ -14,11 +14,11 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="w-100 mh-100" style="padding-top:15px;">
-        <textarea class="form-control" placeholder="Enter Reply Here..." style="height: 100px;"
+    <div class="w-100 mh-100 default-padding">
+        <textarea class="form-control journal-reply-body" placeholder="Enter Reply Here..."
         @bind=@Reply.Body></textarea>
-        <div style="padding-top:15px; text-align:right">
-            <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+        <div class="journal-reply-buttons">
+            <button type="submit" class="btn btn-primary inline">Submit</button>
         </div>
     </div>
 </EditForm>

@@ -19,17 +19,17 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="w-100" style="padding-top:15px;">
-                <textarea class="form-control" placeholder="Enter Journal Reply Here..." style="height: 550px;"
+            <div class="w-100 default-padding">
+                <textarea class="form-control journal-reply-edit" placeholder="Enter Journal Reply Here..."
                 @bind=@Reply.Body></textarea>
             </div>
         </div>
 
-        <div class="row" style="padding-top:15px;">
+        <div class="row default-padding">
             <div class="col">
                 <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
-            </div>
-            <div class="col" style="text-align:right;">
+            </div> 
+            <div class="col text-align-right">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>

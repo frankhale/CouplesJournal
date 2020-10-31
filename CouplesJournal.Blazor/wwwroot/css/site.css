@@ -49,10 +49,6 @@ a, .btn-link {
         top: 0.5rem;
     }
 
-.journal-entry-edit {
-    height: 450px !important;    
-}
-
 .journal-draft {
     margin-bottom: 15px;
     background-color: #555555;

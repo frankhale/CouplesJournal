@@ -1,0 +1,16 @@
+﻿.default-padding {
+    padding-top: 15px;
+}
+
+.journal-reply-body {
+    height: 100px;
+}
+
+.journal-reply-buttons {
+    padding-top:15px; 
+    text-align:right;
+}
+
+.inline {
+    display:inline;
+}

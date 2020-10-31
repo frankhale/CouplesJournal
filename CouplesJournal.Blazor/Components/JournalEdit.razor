@@ -15,7 +15,7 @@
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <EditForm Model=@Journal OnValidSubmit="@Submit">
+    <EditForm Model=@Journal OnValidSubmit=@Submit>
         <DataAnnotationsValidator />
         <ValidationSummary />
 
@@ -25,18 +25,18 @@
                     <input class="form-control" type="text" placeholder="Enter Title Here..." @bind=@Journal.Title />
                 </div>
 
-                <div class="w-100" style="padding-top:15px;">
-                    <textarea class="form-control journal-entry-edit" placeholder="Enter Journal Here..." @bind=@Journal.Body></textarea>
+                <div class="w-100 default-padding">
+                    <textarea class="form-control journal-edit" placeholder="Enter Journal Here..." @bind=@Journal.Body></textarea>
                 </div>
             </div>
 
-            <div class="row" style="padding-top:15px;">
+            <div class="row default-padding">
                 <div class="col">
                     <button class="btn btn-danger" @onclick=@OnDeleteButtonClicked @onclick:preventDefault>Delete</button>
                 </div>
-                <div class="col" style="text-align:right;display:inline;">
-                    <div style="display:inline;">
-                        <div class="dropdown" style="display:inline;">
+                <div class="col journal-edit-buttons">
+                    <div class="inline">
+                        <div class="dropdown inline">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @Journal.Status.Value
@@ -51,7 +51,7 @@
                                 }
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="display:inline;">Submit</button>
+                        <button type="submit" class="btn btn-primary inline">Submit</button>
                     </div>
                 </div>
             </div>
