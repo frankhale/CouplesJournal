@@ -5,10 +5,11 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @using System.Timers
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 @inject CouplesJournalDbContext DbContext
 @inject NavigationManager NavigationManager
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject ProtectedLocalStorage LocalStorage
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -29,17 +30,17 @@
             <div class="w-100 mh-100" style="padding-top:15px; text-align:right;display:inline;">
                 <div class="dropdown" style="display:inline;">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownJournalStatusButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @Journal.Status.Value
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                         @foreach (var status in Statuses)
-                            {
-                        <button class="dropdown-item" type="button"
-                        @onclick="eventArgs => { OnMenuItemSelected(status); }">
-                            @status.Value
-                        </button>
-                                    }
+                        {
+                            <button class="dropdown-item" type="button"
+                                    @onclick="eventArgs => { OnMenuItemSelected(status); }">
+                                @status.Value
+                            </button>
+                        }
                     </div>
                 </div>
 
@@ -63,13 +64,18 @@
         if (firstRender && Journal != null &&
             string.IsNullOrEmpty(Journal.Title) && string.IsNullOrEmpty(Journal.Body))
         {
-            var journal = await LocalStorage.GetItemAsync<JournalEntry>("journal");
-            if (journal != null)
+            try
             {
-                Journal.Title = journal.Title;
-                Journal.Body = journal.Body;
-                this.StateHasChanged();
+                var journal = await LocalStorage.GetAsync<JournalEntry>("journal");
+
+                if (journal.Value != null)
+                {
+                    Journal.Title = journal.Value.Title;
+                    Journal.Body = journal.Value.Body;
+                    this.StateHasChanged();
+                }
             }
+            catch { }
         }
     }
 
@@ -96,7 +102,7 @@
     {
         if (!string.IsNullOrEmpty(Journal.Title) || !string.IsNullOrEmpty(Journal.Body))
         {
-            await LocalStorage.SetItemAsync("journal", Journal);
+            await LocalStorage.SetAsync("journal", Journal);
         }
     }
 
@@ -106,7 +112,7 @@
 
         using var api = new CouplesJournalDataApi(DbContext, _user);
         await api.AddJournalEntryAsync(Journal);
-        await LocalStorage.RemoveItemAsync("journal");
+        await LocalStorage.DeleteAsync("journal");
 
         if (Journal.Status.Value != "Draft")
         {

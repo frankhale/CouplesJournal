@@ -1,4 +1,3 @@
-using Blazored.LocalStorage;
 using CouplesJournal.Blazor.Areas.Identity;
 using CouplesJournal.Data;
 using CouplesJournal.Data.Entities;
@@ -45,8 +44,7 @@ namespace CouplesJournal.Blazor
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddBlazoredLocalStorage();
+            
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
