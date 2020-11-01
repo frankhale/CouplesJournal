@@ -40,6 +40,7 @@ Minimum Viable Product:
 
 Other:
 
+- [ ] Hide register user on login page
 - [ ] As a user I'd like to preview my journal before I submit
 - [ ] As a user I'd like to have a page that provides my analytics 
     - number of journals posted
@@ -62,11 +63,20 @@ Raspberry Pi Setup:
 
 ## Status
 
-All features I marked in MVP are done. I'm working on some nice to haves and then finish
-the remaining server admin work.
+All features I marked in MVP are done. I'm working on some nice to haves and 
+then finish the remaining server admin work.
 
-.NET 5 runs well on the Pi 3B+ but it's a little slower than I'd want. I may end up moving 
-this app to a Pi 4. That being said I'm okay with the performance of the Pi 3B+ right now.
+.NET 5 runs well on the Pi 3B+ but it's a little slower than I'd want. I may 
+end up moving this app to a Pi 4. That being said I'm okay with the performance 
+of the Pi 3B+ right now.
+
+The user authentication uses the individual user accounts option that you can
+click on during project creation. I've tweaked it a little to change how users
+are created. Instead of users being created with a username of an email 
+address, you can now create a user with a proper username and displayname. Even
+though I have the register page still showing I plan to turn that off and just
+use the scripted accounts via the appsettings.json that I implemented. The app
+should have only two users.
 
 ## Author(s)
 
