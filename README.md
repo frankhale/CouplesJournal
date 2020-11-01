@@ -24,23 +24,30 @@ Minimum Viable Product:
 - [x] As a user I should be able to edit my journal entries
 - [x] As a user I should be able to view my journal entries as well as my
       partners in a list with newest first
-- [x] As a user I should be able to reply to a journal entries written by my partner
+- [x] As a user I should be able to reply to a journal entries written by my 
+      partner
 - [x] As a user I should be able to delete a journal entry that I wrote
 - [x] As a user I should be able to delete a reply that I wrote
 - [x] As a user I should be able to page journal results
-- [x] As a user I want to be notified by email when my partner submits a journal entry
-- [x] As a user I want to be notified by email when my partner updates a journal entry
-- [x] As a user I want to be notified by email when my partner replies to one of my journal entries
+- [x] As a user I want to be notified by email when my partner submits a 
+      journal entry
+- [x] As a user I want to be notified by email when my partner updates a 
+      journal entry
+- [x] As a user I want to be notified by email when my partner replies to one 
+      of my journal entries
+- [x] As a user I'd like to know how many replies a journal has when viewing 
+      the journal list page
 
 Other:
 
+- [ ] As a user I'd like to preview my journal before I submit
 - [ ] As a user I'd like to have a page that provides my analytics 
     - number of journals posted
     - number of replies
-- [ ] As a user I should be able to export journal entries as PDF for easy backup,
-  printing my entries as well as the ones shared with me
-- [ ] As a user I should be able to confirm my account via email (currently there is a
-  button to fake this) when registering
+- [ ] As a user I should be able to export journal entries as PDF for easy 
+      backup, printing my entries as well as the ones shared with me
+- [ ] As a user I should be able to confirm my account via email (currently 
+      there is a button to fake this) when registering
 
 Raspberry Pi Setup:
 
@@ -67,4 +74,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-29 October 2020
+31 October 2020
