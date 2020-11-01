@@ -37,14 +37,14 @@ Minimum Viable Product:
       of my journal entries
 - [x] As a user I'd like to know how many replies a journal has when viewing 
       the journal list page
+- [x] As a user I'd like to have a page that provides my analytics 
+        - number of journals posted
+        - number of replies
 
 Other:
 
-- [ ] Hide register user on login page
+- [x] Hide register user on login page
 - [ ] As a user I'd like to preview my journal before I submit
-- [ ] As a user I'd like to have a page that provides my analytics 
-    - number of journals posted
-    - number of replies
 - [ ] As a user I should be able to export journal entries as PDF for easy 
       backup, printing my entries as well as the ones shared with me
 - [ ] As a user I should be able to confirm my account via email (currently 
