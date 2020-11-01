@@ -1,0 +1,27 @@
+﻿@using CouplesJournal.Data
+@using CouplesJournal.Data.API
+@using CouplesJournal.Data.Model
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject CouplesJournalDbContext DbContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (myStats != null)
+{
+<span class="mystats">Journals: @myStats.NumberOfJournals | Replies: @myStats.NumberOfReplies</span>
+}
+
+@code {
+    [Parameter]
+    public string UserName { get; set; }
+
+    private UserStats myStats { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        using var api = new CouplesJournalDataApi(DbContext, authState.User);
+        myStats = api.GetUserStats(UserName);
+        StateHasChanged();
+    }
+}

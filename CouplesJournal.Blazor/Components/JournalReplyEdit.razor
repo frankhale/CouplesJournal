@@ -95,7 +95,7 @@ else
         var api = new CouplesJournalDataApi(DbContext, _user);
         await api.EditJournalEntryReplyAsync(ReplyIdGuid, Reply);
 
-        NavigationManager.NavigateTo($"/ViewJournal/{JournalId}");
+        NavigationManager.NavigateTo($"/ViewJournal/{JournalId}", true);
     }
 
     private async Task OnDeleteButtonClicked()

@@ -1,4 +1,5 @@
 ﻿using CouplesJournal.Data.Entities;
+using CouplesJournal.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,18 @@ namespace CouplesJournal.Data.API
             }
         }
         #endregion
+
+        public UserStats GetUserStats(string userName)
+        {
+            var journals = _db.JournalEntries.Count(x => x.UserName == userName && x.Status.Value != "Draft");
+            var replies = _db.JournalReplies.Count(x => x.UserName == userName);
+
+            return new UserStats
+            { 
+                NumberOfJournals = journals,
+                NumberOfReplies = replies
+            };
+        }
 
         #region Journal
         public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize)

@@ -1,4 +1,5 @@
 ﻿using CouplesJournal.Data.Entities;
+using CouplesJournal.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace CouplesJournal.Data.API
         Task<bool> SaveChangesAsync();
         void Add<T>(T entity) where T : Entity;
         void Delete<T>(T entity) where T : Entity;
+
+        UserStats GetUserStats(string userName);
 
         #region Journal
         Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize);
