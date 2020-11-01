@@ -44,7 +44,8 @@ Minimum Viable Product:
 Other:
 
 - [x] Hide register user on login page
-- [ ] As a user I'd like to preview my journal before I submit
+- [ ] As a user I'd like to preview my journal before I submit (eg for 
+      Markdown transformation)
 - [ ] As a user I should be able to export journal entries as PDF for easy 
       backup, printing my entries as well as the ones shared with me
 - [ ] As a user I should be able to confirm my account via email (currently 
