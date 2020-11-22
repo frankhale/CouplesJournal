@@ -36,7 +36,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownJournalStatusButton">
                         @foreach (var status in Statuses)
                         {
-                            <button key=@status class="dropdown-item" type="button"
+                            <button key=@status.Id class="dropdown-item" type="button"
                                     @onclick="eventArgs => { OnMenuItemSelected(status); }">
                                 @status.Value
                             </button>

@@ -42,7 +42,7 @@
                 <div class="col mw-100">
                     @foreach (var reply in Journal.Replies.OrderByDescending(x => x.UpdatedOn))
                     {
-                        <div key=@reply class="card rounded content-border default-margin">
+                        <div key=@reply.Id class="card rounded content-border default-margin">
                             <div class="card-body ">
                                 <div class="card-subtitle mb-2 text-muted">
                                     <span>
