@@ -83,7 +83,6 @@ else
 
         try
         {
-
             Statuses = (await api.GetJournalStatusesAsync()).ToList();
             Journal = await api.GetJournalEntryWithRepliesAsync(JournalIdGuid);
 
