@@ -84,7 +84,7 @@ namespace CouplesJournal.Data.API
             var replies = _db.JournalReplies.Count(x => x.UserName == userName);
 
             return new UserStats
-            { 
+            {
                 NumberOfJournals = journals,
                 NumberOfReplies = replies
             };
@@ -177,6 +177,29 @@ namespace CouplesJournal.Data.API
 
                 journalEntry.MarkedForDeletion = true;
 
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public bool GetViewTracking(Guid entryId, string userName)
+        {
+            return _db.JournalViewTracker.Any(x => x.JournalEntryId == entryId && x.UserName == userName);
+        }
+
+        public async Task AddViewTrackingAsync(Guid entryId, string userName)
+        {
+            var trackingExists = _db.JournalViewTracker.Any(x => x.JournalEntryId == entryId && x.UserName == userName);
+
+            if (!trackingExists)
+            {
+                var journalViewTracker = new JournalViewTracker()
+                {
+                    JournalEntryId = entryId,
+                    UserName = userName,
+                    CreatedOn = DateTime.Now
+                };
+
+                _db.JournalViewTracker.Add(journalViewTracker);
                 await _db.SaveChangesAsync();
             }
         }

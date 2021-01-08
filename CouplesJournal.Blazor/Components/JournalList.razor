@@ -1,5 +1,7 @@
 ﻿@namespace CouplesJournal.Blazor.Components
 
+@using CouplesJournal.Data
+@using CouplesJournal.Data.API
 @using CouplesJournal.Data.Entities
 @using CouplesJournal.Blazor.Helper
 @using Markdig
@@ -7,6 +9,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 
+@inject CouplesJournalDbContext DbContext
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="container-fluid">
@@ -50,6 +53,15 @@
         if (journal.Status.Value == "Draft")
         {
             return "content-draft";
+        }
+        else
+        {
+            var api = new CouplesJournalDataApi(DbContext, _user);
+            var result = api.GetViewTracking(journal.Id, _user.Identity.Name);
+
+            if(!result) {
+                return "content-unread";
+            }
         }
 
         return string.Empty;

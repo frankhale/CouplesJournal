@@ -25,6 +25,8 @@ namespace CouplesJournal.Data.API
         Task<JournalEntry> GetJournalEntryWithRepliesAsync(Guid entryId);
         Task<IEnumerable<JournalEntry>> GetMyJournalEntriesAsync(string userName);
         Task DeleteJournalEntryAsync(Guid entryId);
+        bool GetViewTracking(Guid entryId, string userName);
+        Task AddViewTrackingAsync(Guid entryId, string userName);
         #endregion
 
         #region Journal Reply

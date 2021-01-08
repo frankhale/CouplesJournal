@@ -96,6 +96,8 @@ else
                 var api = new CouplesJournalDataApi(DbContext, _user);
 
                 Journal = await api.GetJournalEntryWithRepliesAsync(journalIdGuid);
+
+                await api.AddViewTrackingAsync(journalIdGuid, _user.Identity.Name);
             }
             catch (FormatException fe)
             {

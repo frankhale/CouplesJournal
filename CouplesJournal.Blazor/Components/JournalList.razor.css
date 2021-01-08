@@ -1,3 +1,7 @@
 ﻿.default-margin {
     margin-top: 15px
 }
+
+.content-unread {
+    background-color: #610B0B;
+}
