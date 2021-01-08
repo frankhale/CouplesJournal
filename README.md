@@ -53,12 +53,7 @@ Other:
 
 ## Status
 
-All features I marked in MVP are done. I'm working on some nice to haves and
-then finish the remaining server admin work.
-
-.NET 5 runs well on the Pi 3B+ but it's a little slower than I'd want. I may
-end up moving this app to a Pi 4. That being said I'm okay with the performance
-of the Pi 3B+ right now.
+All features I marked in MVP are done. I'm using the app in production.
 
 The user authentication uses the individual user accounts option that you can
 click on during project creation. I've tweaked it a little to change how users
