@@ -10,11 +10,15 @@
 @inject CouplesJournalDbContext DbContext
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h3>My Journal Entries</h3>
-
 @if (Journals.Any())
 {
-    <JournalList Journals=@Journals />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mw-100">
+                <JournalList Journals=@Journals />            
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -23,6 +27,9 @@ else
 
 @code
 {
+    [Parameter]
+    public int? PageNumber { get; set; }
+
     private List<JournalEntry> Journals { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -32,5 +39,13 @@ else
         var api = new CouplesJournalDataApi(DbContext, authState.User);
 
         Journals = (await api.GetMyJournalEntriesAsync(user.Identity.Name)).ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (PageNumber == null || !PageNumber.HasValue)
+        {
+            PageNumber = 0;
+        }
     }
 }

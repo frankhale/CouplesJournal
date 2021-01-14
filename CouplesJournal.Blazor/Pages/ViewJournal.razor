@@ -2,11 +2,7 @@
 
 @attribute [Authorize(Roles = "Contributor")]
 
-@using Microsoft.AspNetCore.WebUtilities
-
 @inject NavigationManager NavigationManager
-
-<h3>View Journal Entry</h3>
 
 <JournalView JournalId=@JournalId></JournalView>
 
