@@ -91,7 +91,7 @@ namespace CouplesJournal.Data.API
         }
 
         #region Journal
-        public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize, string filter)
         {
             var query = _db.JournalEntries.Include(x => x.Status)
                                           .Include(x => x.Replies)
@@ -99,6 +99,11 @@ namespace CouplesJournal.Data.API
                                           .OrderByDescending(x => x.UpdatedOn)
                                           .Skip((pageNumber - 1) * pageSize)
                                           .Take(pageSize);
+
+            if(!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
+            {
+                query = query.Where(x => x.UserName == _user.Identity.Name);
+            }
 
             return await query.ToListAsync();
         }
@@ -108,9 +113,16 @@ namespace CouplesJournal.Data.API
             return _db.JournalEntries.Any(x => x.Status.Value.ToLower() == "final");
         }
 
-        public int GetTotalJournals()
+        public int GetTotalJournals(string filter)
         {
-            return _db.JournalEntries.Include(x => x.Status).Count(x => x.Status.Value != "Draft");
+            var result = _db.JournalEntries.Include(x => x.Status);
+
+            if(!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
+            {
+                return result.Where(x => x.UserName == _user.Identity.Name).Count(x => x.Status.Value != "Draft");
+            }
+
+            return result.Count(x => x.Status.Value != "Draft");
         }
 
         public async Task AddJournalEntryAsync(JournalEntry entry)

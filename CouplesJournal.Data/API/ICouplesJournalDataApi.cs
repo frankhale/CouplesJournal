@@ -15,9 +15,9 @@ namespace CouplesJournal.Data.API
         UserStats GetUserStats(string userName);
 
         #region Journal
-        Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize, string filter);
         bool HasJournalsToView();
-        int GetTotalJournals();
+        int GetTotalJournals(string filter);
         Task AddJournalEntryAsync(JournalEntry entry);
         Task EditJournalEntryAsync(Guid entryId, JournalEntry entry);
         Task<JournalEntry> GetJournalEntryAsync(Guid entryId);
