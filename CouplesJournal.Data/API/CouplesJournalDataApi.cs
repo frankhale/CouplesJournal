@@ -94,14 +94,19 @@ namespace CouplesJournal.Data.API
         public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize, string filter)
         {
             var query = _db.JournalEntries.Include(x => x.Status)
-                                          .Include(x => x.Replies)
-                                          .Where(x => x.Status.Value != "Draft")
+                                          .Include(x => x.Replies)                                          
                                           .OrderByDescending(x => x.UpdatedOn)
                                           .AsQueryable();                                          
 
             if(!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
             {
-                query = query.Where(x => x.UserName == _user.Identity.Name);
+                query = query.Where(x => x.UserName == _user.Identity.Name &&
+                                         x.Status.Value == "Draft" ||
+                                         x.Status.Value == "Final");
+            }
+            else
+            {
+                query = query.Where(x => x.Status.Value != "Draft");
             }
 
             query = query.Skip((pageNumber - 1) * pageSize)

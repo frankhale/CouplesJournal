@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Linq;
 using Markdig;
+using System.Text;
 
 namespace CouplesJournal.Blazor.Helper
 {
@@ -39,7 +40,29 @@ namespace CouplesJournal.Blazor.Helper
                                                    .UseGenericAttributes()
                                                    .Build();
 
-            return Markdown.ToHtml(str.SanitizeInput(), pipeline);
+            var sanitizedStr = str.SanitizeInput();
+
+            StringBuilder text = new StringBuilder();
+            var lines = sanitizedStr.Split("\n");
+            foreach (var line in lines)
+            {
+                if (line.Contains("yt:"))
+                {
+                    var split = line.Split(":");
+                    if (split.Count() > 0)
+                    {
+                        text.AppendLine($"<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/{split[1].Replace("...","")}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard - write; encrypted - media; gyroscope; picture -in-picture\" allowfullscreen></iframe>");
+                    }
+                }
+                else
+                {
+                    text.AppendLine(line);
+                }
+            }
+
+            var markdown = Markdown.ToHtml(text.ToString(), pipeline);
+
+            return text.ToString();
         }
     }
 }
