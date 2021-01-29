@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Linq;
+using Markdig;
 
 namespace CouplesJournal.Blazor.Helper
 {
@@ -25,10 +26,20 @@ namespace CouplesJournal.Blazor.Helper
             return new MarkupString(SanitizeInput(markupString.Value));
         }
 
-        private static string SanitizeInput(string value)
+        private static string SanitizeInput(this string value)
         {
             var sanitizer = new HtmlSanitizer();
             return sanitizer.Sanitize(value);
+        }
+
+        public static string ConvertToMarkdown(this string str)
+        {
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions()
+                                                   .UseCustomContainers()
+                                                   .UseGenericAttributes()
+                                                   .Build();
+
+            return Markdown.ToHtml(str.SanitizeInput(), pipeline);
         }
     }
 }

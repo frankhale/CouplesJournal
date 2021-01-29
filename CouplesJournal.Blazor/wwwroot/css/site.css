@@ -75,3 +75,15 @@ a, .btn-link {
 .content-draft {    
     background-color: #565;
 }
+
+.journal-quote {
+    border-left: 4px solid gray;
+    background-color: #444;
+    padding: 10px;
+    color: #ddd;
+    margin-bottom: 15px
+}
+.journal-quote > p {
+    padding-left: 10px;
+    margin-bottom: unset;
+}

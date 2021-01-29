@@ -24,7 +24,7 @@
                             @Journal.UpdatedOn.ToLongDateString() &#64; @Journal.UpdatedOn.ToLongTimeString()
                         </h6>
                         <p class="card-text default-margin">
-                            @(((MarkupString) Markdown.ToHtml(@Journal.Body)).Sanitize())
+                            @((MarkupString) @Journal.Body.ConvertToMarkdown())
                         </p>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                                     }
                                 </div>
                                 <p class="card-text default-margin">
-                                    @(((MarkupString) Markdown.ToHtml(@reply.Body)).Sanitize())
+                                    @((MarkupString) @reply.Body.ConvertToMarkdown())
                                 </p>
                             </div>
                         </div>
