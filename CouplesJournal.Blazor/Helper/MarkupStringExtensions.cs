@@ -58,11 +58,9 @@ namespace CouplesJournal.Blazor.Helper
                 {
                     text.AppendLine(line);
                 }
-            }
+            }            
 
-            var markdown = Markdown.ToHtml(text.ToString(), pipeline);
-
-            return text.ToString();
+            return Markdown.ToHtml(text.ToString(), pipeline);
         }
     }
 }
