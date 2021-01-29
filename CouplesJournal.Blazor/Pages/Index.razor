@@ -1,7 +1,6 @@
 ﻿@page "/"
 @page "/page/{PageNumber:int}"
 
-@using Markdig
 @using CouplesJournal.Data
 @using CouplesJournal.Data.API
 @using CouplesJournal.Blazor.Helper
@@ -27,7 +26,7 @@
     </Authorized>
     <NotAuthorized>
         <div>
-            @(((MarkupString)Welcome).Sanitize())
+            @((MarkupString) Welcome.ConvertToMarkdown())
         </div>
     </NotAuthorized>
 </AuthorizeView>
@@ -37,7 +36,7 @@
     [Parameter]
     public int? PageNumber { get; set; }
 
-    public string Welcome => Markdown.ToHtml("***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.");
+    public string Welcome => "***Welcome*** to Couples Journal. An application to allow couples to share intimate writings.";
     private bool HasJournals { get; set; }
 
     protected override async Task OnInitializedAsync()
