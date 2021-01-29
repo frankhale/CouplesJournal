@@ -28,7 +28,7 @@
                 @foreach (var x in PageLinkRange[CurrentPageOfLinks])
                 {
                     <li key=x class="page-item @(PageNumber == x ? "active" : "")">
-                        @if(!string.IsNullOrEmpty(Filter) && Filter.ToLower() == "me") 
+                        @if (!string.IsNullOrEmpty(Filter) && Filter.ToLower() == "me")
                         {
                             <a class="page-link" href=@($"MyJournals/page/{x}")>@x</a>
                         }
@@ -67,7 +67,7 @@
     public string Filter { get; set; }
 
     private List<JournalEntry> Journals { get; set; }
-    
+
     private int TotalPages { get; set; }
     private int CurrentPageOfLinks { get; set; }
     private List<List<int>> PageLinkRange { get; set; }
@@ -82,6 +82,14 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _user = authState.User;
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (PageNumber == 0)
+        {
+            PageNumber = 1;
+        }
 
         using var api = new CouplesJournalDataApi(DbContext, _user);
         TotalJournals = api.GetTotalJournals(Filter);
@@ -99,17 +107,6 @@
 
         PageLinkRange = Enumerable.Range(1, TotalPages).ToList().ChunkBy(MaxPageLinks);
 
-        StateHasChanged();
-    }
-
-    protected async override Task OnParametersSetAsync()
-    {
-        if (PageNumber == 0)
-        {
-            PageNumber = 1;
-        }
-
-        using var api = new CouplesJournalDataApi(DbContext, _user);
         Journals = (await api.GetPagedJournalEntriesAsync(PageNumber, PageSize, Filter)).ToList();
         await ToggleNextPreviousButtons();
     }

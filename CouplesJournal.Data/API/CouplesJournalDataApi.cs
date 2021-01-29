@@ -97,13 +97,15 @@ namespace CouplesJournal.Data.API
                                           .Include(x => x.Replies)
                                           .Where(x => x.Status.Value != "Draft")
                                           .OrderByDescending(x => x.UpdatedOn)
-                                          .Skip((pageNumber - 1) * pageSize)
-                                          .Take(pageSize);
+                                          .AsQueryable();                                          
 
             if(!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
             {
                 query = query.Where(x => x.UserName == _user.Identity.Name);
             }
+
+            query = query.Skip((pageNumber - 1) * pageSize)
+                         .Take(pageSize);
 
             return await query.ToListAsync();
         }
