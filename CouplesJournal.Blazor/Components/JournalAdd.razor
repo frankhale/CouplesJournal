@@ -99,7 +99,7 @@
 
     private async void SaveJournalToLocalStorage(object source, ElapsedEventArgs e)
     {
-        if (!string.IsNullOrEmpty(Journal.Title) || !string.IsNullOrEmpty(Journal.Body))
+        if (Journal != null && !string.IsNullOrEmpty(Journal.Title) || !string.IsNullOrEmpty(Journal.Body))
         {
             await LocalStorage.SetAsync("journal", Journal);
         }
