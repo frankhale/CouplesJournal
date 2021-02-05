@@ -41,7 +41,7 @@ namespace CouplesJournal.EmailProcessor
                 Password = password,
                 Host = host,
                 Port = port,
-                SubjectPrefix = "[Couples Journal] ",
+                SubjectPrefix = "[Journey] ",
                 UseTls = true,
                 FromAddress = Environment.GetEnvironmentVariable("COUPLES_JOURNAL_SMTP_USERNAME")
             });

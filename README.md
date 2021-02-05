@@ -1,4 +1,4 @@
-# Couples Journal
+# Journey (Blazor)
 
 A simple journaling app for couples to share their messages of love. This is my
 first Raspberry Pi project in that this app will be served from a Raspberry Pi
