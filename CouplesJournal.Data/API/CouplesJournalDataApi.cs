@@ -94,11 +94,11 @@ namespace CouplesJournal.Data.API
         public async Task<IEnumerable<JournalEntry>> GetPagedJournalEntriesAsync(int pageNumber, int pageSize, string filter)
         {
             var query = _db.JournalEntries.Include(x => x.Status)
-                                          .Include(x => x.Replies)                                          
+                                          .Include(x => x.Replies)
                                           .OrderByDescending(x => x.UpdatedOn)
-                                          .AsQueryable();                                          
+                                          .AsQueryable();
 
-            if(!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
+            if (!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
             {
                 query = query.Where(x => x.UserName == _user.Identity.Name &&
                                          x.Status.Value == "Draft" ||
@@ -124,7 +124,7 @@ namespace CouplesJournal.Data.API
         {
             var result = _db.JournalEntries.Include(x => x.Status);
 
-            if(!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
+            if (!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
             {
                 return result.Where(x => x.UserName == _user.Identity.Name).Count(x => x.Status.Value != "Draft");
             }
@@ -198,6 +198,22 @@ namespace CouplesJournal.Data.API
 
                 await _db.SaveChangesAsync();
             }
+        }
+
+        public bool HasUnreadReplies(Guid entryId)
+        {
+            var journalEntry = _db.JournalEntries.Include(x => x.Replies)
+                                                 .FirstOrDefault(x => x.Id == entryId);
+
+            if (journalEntry.Replies.Any())
+            {
+                var replies = journalEntry.Replies.Where(x => x.UserName != _user.Identity.Name).Select(x => x.Id).Cast<Guid?>().ToList();
+                var replyViewTrackers = _db.JournalViewTracker.Where(x => x.ReplyId != null && x.UserName == _user.Identity.Name).Select(x => x.ReplyId).ToList();
+
+                return replies.Except(replyViewTrackers).Any();
+            }
+
+            return false;
         }
 
         public bool GetViewTracking(JournalViewTracker viewTracker, string userName)

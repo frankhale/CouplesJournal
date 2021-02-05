@@ -57,9 +57,10 @@
 
             var result = api.GetViewTracking(viewTracker, _user.Identity.Name);
 
-            if(!result) {
+            if (!result || api.HasUnreadReplies(journal.Id))
+            {
                 return "content-unread";
-            }
+            }            
         }
 
         return string.Empty;
