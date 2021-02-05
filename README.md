@@ -1,5 +1,8 @@
 # Journey (Blazor)
 
+**NOTE**: Rebranding from Couples Journal to Journey is underway and is not 
+          complete
+
 A simple journaling app for couples to share their messages of love. This is my
 first Raspberry Pi project in that this app will be served from a Raspberry Pi
 for my wife and I to share endearing messages between each other.
@@ -37,12 +40,16 @@ Minimum Viable Product:
       of my journal entries
 - [x] As a user I'd like to know how many replies a journal has when viewing
       the journal list page
-- [x] As a user I'd like to have a page that provides my analytics
-        - number of journals posted
-        - number of replies
 
 Other:
 
+- [x] As a user I'd like to have a page that provides my analytics
+        - number of journals posted
+        - number of replies
+- [x] As a user I'd like to know what journals are new by having the new 
+      journals highlighted.
+- [x] As a user I'd like to know what replies are new by having the replies
+      highlighted.
 - [x] Hide register user on login page
 - [ ] As a user I'd like to preview my journal before I submit (eg for
       Markdown transformation)
@@ -69,4 +76,4 @@ Frank Hale &lt;frankhaledevelops@gmail.com&gt;
 
 ## Date
 
-7 January 2021
+5 February 2021

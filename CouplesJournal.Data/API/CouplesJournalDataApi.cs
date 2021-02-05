@@ -200,20 +200,41 @@ namespace CouplesJournal.Data.API
             }
         }
 
-        public bool GetViewTracking(Guid entryId, string userName)
+        public bool GetViewTracking(JournalViewTracker viewTracker, string userName)
         {
-            return _db.JournalViewTracker.Any(x => x.JournalEntryId == entryId && x.UserName == userName);
+            if (viewTracker.JournalEntryId != null)
+            {
+                return _db.JournalViewTracker.Any(x => x.JournalEntryId == viewTracker.JournalEntryId && x.UserName == userName);
+            }
+            else if (viewTracker.ReplyId != null)
+            {
+                return _db.JournalViewTracker.Any(x => x.ReplyId == viewTracker.ReplyId && x.UserName == userName);
+            }
+
+            return false;
         }
 
-        public async Task AddViewTrackingAsync(Guid entryId, string userName)
+        public async Task AddViewTrackingAsync(JournalViewTracker viewTracker, string userName)
         {
-            var trackingExists = _db.JournalViewTracker.Any(x => x.JournalEntryId == entryId && x.UserName == userName);
+            bool trackingExists = false;
+
+            if (viewTracker.JournalEntryId != null)
+            {
+                trackingExists = _db.JournalViewTracker.Any(x => x.JournalEntryId == viewTracker.JournalEntryId && x.UserName == userName);
+                viewTracker.ReplyId = null;
+            }
+            else
+            {
+                trackingExists = _db.JournalViewTracker.Any(x => x.ReplyId == viewTracker.ReplyId && x.UserName == userName);
+                viewTracker.JournalEntryId = null;
+            }
 
             if (!trackingExists)
             {
                 var journalViewTracker = new JournalViewTracker()
                 {
-                    JournalEntryId = entryId,
+                    JournalEntryId = viewTracker.JournalEntryId,
+                    ReplyId = viewTracker.ReplyId,
                     UserName = userName,
                     CreatedOn = DateTime.Now
                 };

@@ -87,3 +87,7 @@ a, .btn-link {
     padding-left: 10px;
     margin-bottom: unset;
 }
+
+.content-unread {
+    background-color: #610B0B;
+}

@@ -50,7 +50,12 @@
         else
         {
             var api = new CouplesJournalDataApi(DbContext, _user);
-            var result = api.GetViewTracking(journal.Id, _user.Identity.Name);
+            var viewTracker = new JournalViewTracker
+            {
+                JournalEntryId = journal.Id
+            };
+
+            var result = api.GetViewTracking(viewTracker, _user.Identity.Name);
 
             if(!result) {
                 return "content-unread";

@@ -15,7 +15,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col mw-100">
-                <div class=@($"card rounded content-border {GetStyle(Journal)}")>
+                <div class=@($"card rounded content-border {GetStyle(Journal, null)}")>
                     <div class="card-body">
                         <h5 class="card-title">@Journal.Title @EntryStatus</h5>
                         <h6 class="card-subtitle mb-2 text-muted content-border-top">
@@ -41,7 +41,7 @@
                 <div class="col mw-100">
                     @foreach (var reply in Journal.Replies.OrderByDescending(x => x.UpdatedOn))
                     {
-                        <div key=@reply.Id class="card rounded content-border default-margin">
+                        <div key=@reply.Id class=@($"card rounded content-border default-margin {GetStyle(null, reply)}")>
                             <div class="card-body ">
                                 <div class="card-subtitle mb-2 text-muted">
                                     <span>
@@ -96,7 +96,12 @@ else
 
                 Journal = await api.GetJournalEntryWithRepliesAsync(journalIdGuid);
 
-                await api.AddViewTrackingAsync(journalIdGuid, _user.Identity.Name);
+                var viewTracker = new JournalViewTracker
+                {
+                    JournalEntryId = Journal.Id
+                };
+
+                await api.AddViewTrackingAsync(viewTracker, _user.Identity.Name);
             }
             catch (FormatException fe)
             {
@@ -114,11 +119,33 @@ else
         }
     }
 
-    private string GetStyle(JournalEntry journal)
+    private string GetStyle(JournalEntry journal, JournalReply reply)
     {
-        if (journal.Status.Value == "Draft")
+        if (journal != null && journal.Status.Value == "Draft")
         {
             return "content-draft";
+        }
+        else if (reply != null && reply.UserName != _user.Identity.Name)
+        {
+            var api = new CouplesJournalDataApi(DbContext, _user);
+            var viewTracker = new JournalViewTracker
+            {
+                ReplyId = reply != null ? reply.Id : null
+            };
+
+            var result = api.GetViewTracking(viewTracker, _user.Identity.Name);
+
+            if (!result)
+            {
+                var newViewTracker = new JournalViewTracker
+                {
+                    ReplyId = reply.Id
+                };
+
+                Task.Run(() => api.AddViewTrackingAsync(newViewTracker, _user.Identity.Name)).GetAwaiter();
+
+                return "content-unread";
+            }
         }
 
         return string.Empty;
