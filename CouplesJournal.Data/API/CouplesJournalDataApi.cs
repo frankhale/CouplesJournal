@@ -95,18 +95,14 @@ namespace CouplesJournal.Data.API
         {
             var query = _db.JournalEntries.Include(x => x.Status)
                                           .Include(x => x.Replies)
+                                          .Where(x => x.Status.Value == "Draft" ||
+                                                      x.Status.Value == "Final")
                                           .OrderByDescending(x => x.UpdatedOn)
                                           .AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter) && filter.ToLower() == "me")
+            if ((!string.IsNullOrEmpty(filter)) && filter.ToLower() == "me")
             {
-                query = query.Where(x => x.UserName == _user.Identity.Name &&
-                                         x.Status.Value == "Draft" ||
-                                         x.Status.Value == "Final");
-            }
-            else
-            {
-                query = query.Where(x => x.Status.Value != "Draft");
+                query = query.Where(x => x.UserName == _user.Identity.Name);
             }
 
             query = query.Skip((pageNumber - 1) * pageSize)

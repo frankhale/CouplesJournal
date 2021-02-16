@@ -11,7 +11,7 @@
 @inject CouplesJournalDbContext DbContext
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-@if (Journals.Any())
+@if (HasJournals)
 {
     <JournalPagination PageNumber=@PageNumber.Value PageSize=5 MaxPageLinks=5 Filter="me">
         <Content Context="journals">
@@ -29,7 +29,7 @@ else
     [Parameter]
     public int? PageNumber { get; set; }
 
-    private List<JournalEntry> Journals { get; set; }
+    private bool HasJournals { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,7 +37,7 @@ else
         var user = authState.User;
         var api = new CouplesJournalDataApi(DbContext, authState.User);
 
-        Journals = (await api.GetMyJournalEntriesAsync(user.Identity.Name)).ToList();
+        HasJournals = api.HasJournalsToView();
     }
 
     protected override void OnParametersSet()
